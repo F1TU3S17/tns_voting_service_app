@@ -1,5 +1,5 @@
 import 'dart:io';
-import '../api/voting_client.dart';
+import '../client/api/voting_client.dart';
 import '../models/login_model.dart';
 import '../models/question_model.dart';
 import 'voting_repository.dart';

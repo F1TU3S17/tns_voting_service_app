@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
+import 'package:tns_voting_service_app/theme/theme.dart';
 
 class MyProfileScreen extends StatelessWidget {
   const MyProfileScreen({super.key});
@@ -6,8 +8,9 @@ class MyProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Личный кабинет"),
+      appBar: GradientAppBar(
+        gradient: AppTheme.defaultGradient,
+        title: "Личный кабинет",
       ),
     );
   }
