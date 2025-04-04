@@ -1,0 +1,23 @@
+name: tns_voting_service_app
+description: "Приложение для Голосования совета директоров ТНС"
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.2
+dependencies:
+  flutter:
+    sdk: flutter
+  hive_flutter: ^1.1.0
+  flutter_secure_storage: ^9.2.4
+  crypto: ^3.0.6
+  http: ^1.3.0
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+flutter:
+  uses-material-design: true
