@@ -3,9 +3,9 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import '../models/login_model.dart';
-import '../models/question_model.dart';
-import '../models/vote_model.dart';
+import '../../models/login_model.dart';
+import '../../models/question_model.dart';
+import '../../models/vote_model.dart';
 
 class VotingClient {
   final http.Client _client;

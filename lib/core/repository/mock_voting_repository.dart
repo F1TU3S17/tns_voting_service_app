@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:flutter/material.dart';
+
 import '../models/login_model.dart';
 import '../models/question_model.dart';
 import 'voting_repository.dart';
@@ -123,7 +125,7 @@ class MockVotingRepository implements VotingRepository {
     }
     
     // Имитация успешного голосования
-    print('Голос принят: вопрос $questionId, ответ $answerId');
+    debugPrint('Голос принят: вопрос $questionId, ответ $answerId');
   }
 
   @override

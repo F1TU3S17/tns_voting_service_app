@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import '../api/voting_client.dart';
+import '../client/api/voting_client.dart';
 import 'mock_voting_repository.dart';
 import 'voting_repository.dart';
 import 'voting_repository_impl.dart';
