@@ -184,6 +184,30 @@ class VotingClient {
     }
   }
   
+  /// Получение истории завершенных голосований
+  Future<List<QuestionDetail>> getVotingHistory() async {
+    try {
+      final response = await _client
+          .get(
+            Uri.parse('$_baseUrl/api/voting/history'),
+            headers: _getHeaders(),
+          )
+          .timeout(_timeout);
+
+      return _handleResponse(
+          response,
+          (data) => (data as List)
+              .map((json) => QuestionDetail.fromJson(json))
+              .toList());
+    } on http.ClientException catch (e) {
+      throw Exception('Ошибка сети: ${e.message}');
+    } on TimeoutException catch (_) {
+      throw Exception('Превышено время ожидания ответа от сервера');
+    } catch (e) {
+      throw Exception('Ошибка получения истории голосований: $e');
+    }
+  }
+  
   /// Проверка валидности токена
   bool get isAuthenticated => _token != null;
   

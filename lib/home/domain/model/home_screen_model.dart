@@ -7,7 +7,7 @@ import 'package:tns_voting_service_app/core/repository/voting_repository.dart';
 ///
 /// Управляет состоянием и загрузкой данных для экрана со списком вопросов.
 /// Реализует паттерн Provider для обновления UI при изменении данных.
-class HomePageModel extends ChangeNotifier{
+class HomeScreenModel extends ChangeNotifier{
   /// Репозиторий для работы с данными голосования.
   final VotingRepository repository = RepositoryProvider.getRepository(); 
 

@@ -15,6 +15,20 @@ abstract class AppTheme {
           backgroundColor: Colors.transparent,
           elevation: 0,
       ),
+      primaryColor: Color(0xFF00E457),
+      colorScheme: ColorScheme(
+        primary: Color(0xFF00E457),
+        onPrimary: Colors.white,
+        secondary: Color(0xFF14BEEE),
+        onSecondary: Colors.white,
+        surface: Colors.white,
+        onSurface: Colors.black87,
+        background: Color(0xFFE2E2E2),
+        onBackground: Colors.black87,
+        error: Colors.red,
+        onError: Colors.white,
+        brightness: Brightness.light,
+      ),
       scaffoldBackgroundColor: Color(0xFFE2E2E2),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
@@ -77,11 +91,9 @@ abstract class AppTheme {
         ),
         labelLarge: TextStyle(
           fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: Color(0xFF00D921),
         ),
-      ),
-    );
+      )
+   );
 
     static ThemeData darkTheme = ThemeData(
       scaffoldBackgroundColor: Color(0xFF1A1A1A),

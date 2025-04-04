@@ -35,6 +35,11 @@ class VotingRepositoryImpl implements VotingRepository {
   }
 
   @override
+  Future<List<QuestionDetail>> getVotingHistory() async {
+    return await _client.getVotingHistory();
+  }
+
+  @override
   bool get isAuthenticated => _client.isAuthenticated;
 
   @override
