@@ -3,6 +3,7 @@ class QuestionShort {
   final String title;
   final String description;
   final int votersCount;
+  final int votersTotal;
   final DateTime endDate;
 
   QuestionShort({
@@ -10,6 +11,7 @@ class QuestionShort {
     required this.title,
     required this.description,
     required this.votersCount,
+    required this.votersTotal,
     required this.endDate,
   });
 
@@ -19,6 +21,7 @@ class QuestionShort {
       title: json['title'],
       description: json['description'],
       votersCount: json['votersCount'],
+      votersTotal: json['votersTotal'],
       endDate: DateTime.parse(json['endDate']),
     );
   }
@@ -50,6 +53,7 @@ class QuestionDetail {
   final String description;
   final List<FileInfo> files;
   final int votersCount;
+  final int votersTotal;
   final List<String> options;
   final VotingType votingType;
   final VotingWay votingWay;
@@ -61,6 +65,7 @@ class QuestionDetail {
     required this.description,
     required this.files,
     required this.votersCount,
+    required this.votersTotal,
     required this.options,
     required this.votingType,
     required this.votingWay,
@@ -76,6 +81,7 @@ class QuestionDetail {
           .map((fileJson) => FileInfo.fromJson(fileJson))
           .toList(),
       votersCount: json['votersCount'],
+      votersTotal: json['votersTotal'],
       options: List<String>.from(json['options']),
       votingType: json['votingType'] == 'com' ? VotingType.com : VotingType.bod,
       votingWay: json['votingWay'] == 'majority'

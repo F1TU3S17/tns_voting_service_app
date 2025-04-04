@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tns_voting_service_app/core/utils/parse_date.dart';
 
 class SessionCard extends StatelessWidget {
   final String title;
   final String description;
   final String sessionType;
   final String votesInfo;
+  final DateTime date;
 
   const SessionCard({
     Key? key,
@@ -12,6 +14,7 @@ class SessionCard extends StatelessWidget {
     required this.description,
     required this.sessionType,
     required this.votesInfo,
+    required this.date
   }) : super(key: key);
 
   @override
@@ -21,8 +24,12 @@ class SessionCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _SessionHeader(title: title, theme: theme),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+              child: _SessionHeader(title: title, theme: theme, endDate: date,),
+            ),
             _SessionContent(
               description: description, 
               sessionType: sessionType, 
@@ -39,16 +46,24 @@ class SessionCard extends StatelessWidget {
 class _SessionHeader extends StatelessWidget {
   final String title;
   final ThemeData theme;
+  final DateTime endDate;
 
   const _SessionHeader({
     Key? key,
     required this.title,
     required this.theme,
+    required this.endDate,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Text(title, style: theme.textTheme.labelLarge);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(title, style: theme.textTheme.labelLarge), 
+        Text(parseDate(endDate), style: theme.textTheme.labelSmall),
+      ]
+    );
   }
 }
 

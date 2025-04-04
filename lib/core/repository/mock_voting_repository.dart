@@ -7,9 +7,10 @@ import '../models/question_model.dart';
 import 'voting_repository.dart';
 
 class MockVotingRepository implements VotingRepository {
-  String? _token;
+  String? _token = 'dsadasjldsadjasldasj;da';
   final List<QuestionShort> _questions = [];
   final Map<String, QuestionDetail> _questionDetails = {};
+  final List<QuestionDetail> _votingHistory = [];
   final Map<String, String> _files = {};
   final Random _random = Random();
 
@@ -21,11 +22,13 @@ class MockVotingRepository implements VotingRepository {
     // Создаем мок-данные для вопросов
     for (int i = 1; i <= 5; i++) {
       final String id = 'q$i';
+      final int votersTotal = _random.nextInt(10) + 10;
       final questionShort = QuestionShort(
         id: id,
         title: 'Вопрос #$i',
         description: 'Описание вопроса #$i для голосования директоров',
-        votersCount: _random.nextInt(10) + 5,
+        votersCount: _random.nextInt(votersTotal),
+        votersTotal: votersTotal,
         endDate: DateTime.now().add(Duration(days: _random.nextInt(14) + 1)),
       );
       _questions.add(questionShort);
@@ -45,11 +48,36 @@ class MockVotingRepository implements VotingRepository {
         description: questionShort.description,
         files: files,
         votersCount: questionShort.votersCount,
-        options: ['За', 'Против', 'Воздержался'],
+        votersTotal: questionShort.votersTotal,
+        options: ['За', 'Против', 'Воздержаться'],
         votingType: _random.nextBool() ? VotingType.com : VotingType.bod,
         votingWay: _random.nextBool() ? VotingWay.majority : VotingWay.unanimous,
         conferenceLink: 'https://zoom.us/j/123456789',
       );
+    }
+
+    // Создаем историю завершенных голосований
+    for (int i = 1; i <= 3; i++) {
+      final String id = 'hist$i';
+      final List<FileInfo> files = [];
+      final String fileId = '${id}_protocol';
+      final String fileName = 'Протокол голосования #$i.pdf';
+      files.add(FileInfo(id: fileId, name: fileName));
+      _files[fileId] = 'Содержимое протокола голосования #$i';
+      final int votersTotal = _random.nextInt(10) + 10;
+      
+      _votingHistory.add(QuestionDetail(
+        id: id,
+        title: 'Завершенное голосование #$i',
+        description: 'Описание завершенного голосования #$i',
+        files: files,
+        votersCount: _random.nextInt(votersTotal),
+        votersTotal: votersTotal,
+        options: ['За', 'Против', 'Воздержаться'],
+        votingType: _random.nextBool() ? VotingType.com : VotingType.bod,
+        votingWay: _random.nextBool() ? VotingWay.majority : VotingWay.unanimous,
+        conferenceLink: 'https://zoom.us/j/123456789',
+      ));
     }
   }
 
@@ -126,6 +154,15 @@ class MockVotingRepository implements VotingRepository {
     
     // Имитация успешного голосования
     debugPrint('Голос принят: вопрос $questionId, ответ $answerId');
+  }
+
+  @override
+  Future<List<QuestionDetail>> getVotingHistory() async {
+    await Future.delayed(Duration(milliseconds: 800));
+    if (_token == null) {
+      throw Exception('Токен недействителен');
+    }
+    return _votingHistory;
   }
 
   @override

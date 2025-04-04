@@ -1,0 +1,15 @@
+{
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/build/**": true,
+        "**/android/build/**": true,
+        "**/ios/**": true,
+        "**/node_modules/**": true
+    },
+    "search.exclude": {
+        "**/build": true,
+        "**/android": true,
+        "**/ios": true
+    }
+}

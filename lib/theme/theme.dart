@@ -15,6 +15,7 @@ abstract class AppTheme {
           backgroundColor: Colors.transparent,
           elevation: 0,
       ),
+      primaryColor: Color(0xFF00E457),
       scaffoldBackgroundColor: Color(0xFFE2E2E2),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
@@ -80,6 +81,9 @@ abstract class AppTheme {
           fontWeight: FontWeight.w500,
           color: Color(0xFF00D921),
         ),
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: Color(0xFF00D921),
       ),
     );
 
