@@ -18,6 +18,9 @@ abstract class VotingRepository {
   /// Голосование
   Future<void> vote(String questionId, int answerId);
   
+  /// Получение истории завершенных голосований
+  Future<List<QuestionDetail>> getVotingHistory();
+  
   /// Проверка авторизации
   bool get isAuthenticated;
   

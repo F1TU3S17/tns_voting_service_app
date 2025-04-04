@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tns_voting_service_app/home/presentation/screens/home_page.dart';
+import 'package:tns_voting_service_app/home/presentation/screens/home_screen.dart';
 import 'package:tns_voting_service_app/my_profile/presentation/screens/my_profile_screen.dart';
 
 class NavbarModel extends ChangeNotifier {
