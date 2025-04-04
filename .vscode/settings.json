@@ -11,5 +11,6 @@
         "**/build": true,
         "**/android": true,
         "**/ios": true
-    }
+    },
+    "cmake.sourceDirectory": "C:/Users/podko/Desktop/tns-3/tns_voting_service_app/windows"
 }

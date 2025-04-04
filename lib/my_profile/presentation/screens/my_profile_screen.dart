@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
+import 'package:tns_voting_service_app/nav_bar/domain/state/navbar_model.dart';
+import 'package:tns_voting_service_app/nav_bar/domain/state/navbar_model_provider.dart';
 import 'package:tns_voting_service_app/theme/theme.dart';
 
 class ProfileMenuItem {
@@ -19,11 +21,18 @@ class MyProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final NavbarModel model = NavbarModelProvider.of(context)!.model;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     final List<ProfileMenuItem> menuItems = [
       ProfileMenuItem(
         icon: Icons.history,
         title: 'История голосований',
-        onTap: () {},
+        onTap: () {
+          model.changeItem(3);
+        },
       ),
       ProfileMenuItem(
         icon: Icons.settings,
@@ -45,50 +54,54 @@ class MyProfileScreen extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            color: Colors.white,
-         
+            color: colorScheme.surface,
+            padding: const EdgeInsets.symmetric(vertical: 16),
             child: Center(
               child: Column(
                 children: [
-                  Text('Иванов Иван Иванович',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                      )),
-                  Text('ivaivaiva@tns.ru',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                      )),
+                  Text(
+                    'Иванов Иван Иванович',
+                    style: textTheme.headlineSmall?.copyWith(
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'ivaivaiva@tns.ru',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
           Container(
-            height: 3,
-            color: const Color.fromARGB(173, 76, 175, 79),
+            height: 1,
+            color: colorScheme.onSurface,
           ),
           Expanded(
             child: Container(
+              //color: colorScheme.surface,
               child: ListView.separated(
                 itemCount: menuItems.length,
-                separatorBuilder: (context, index) => Container(
+                separatorBuilder: (context, index) => Divider(
                   height: 1,
-                  color: const Color.fromARGB(172, 1, 1, 1),
                 ),
                 itemBuilder: (context, index) {
                   final item = menuItems[index];
                   return ListTile(
-                    leading: Icon(item.icon),
+                    leading: Icon(
+                      item.icon,
+                      color: colorScheme.onSurface,
+                    ),
                     title: Text(
                       item.title,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: const Color.fromARGB(255, 0, 0, 0),
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     onTap: item.onTap,
-                    
                     mouseCursor: SystemMouseCursors.click,
                   );
                 },
