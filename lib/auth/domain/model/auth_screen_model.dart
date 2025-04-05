@@ -11,11 +11,15 @@ class AuthScreenModel extends ChangeNotifier {
   String _password = "";
   String _loginError = "";
   String _passwordError = "";
+  bool _isLoading = false;
+  bool _obscurePassword = true;
 
   String get login => _login;
   String get password => _password;
   String get loginError => _loginError;
   String get passwordError => _passwordError;
+  bool get isLoading => _isLoading;
+  bool get obscurePassword => _obscurePassword;
 
   set login(String value) {
     _login = value;
@@ -26,6 +30,11 @@ class AuthScreenModel extends ChangeNotifier {
   set password(String value) {
     _password = value;
     _passwordError = ''; // Сбрасываем ошибку при изменении
+    notifyListeners();
+  }
+
+  set obscurePassword(bool value) {
+    _obscurePassword = value;
     notifyListeners();
   }
 
@@ -49,14 +58,17 @@ class AuthScreenModel extends ChangeNotifier {
         _passwordError = '';
       }
     }
-
     notifyListeners();
     return _loginError.isEmpty && _passwordError.isEmpty;
   }
 
   Future<String> auth() async {
+    _isLoading = true;
+    notifyListeners();
     LoginResponse response = await repository.login(login, password);
     if (response.token.isEmpty) throw ("empty token exeption");
+    _isLoading = false;
+    notifyListeners();
     return response.token;
   }
 }
