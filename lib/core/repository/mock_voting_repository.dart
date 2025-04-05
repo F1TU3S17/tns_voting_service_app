@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+import 'package:tns_voting_service_app/core/models/department_model.dart';
 import '../models/login_model.dart';
 import '../models/question_model.dart';
 import 'voting_repository.dart';
@@ -260,5 +261,29 @@ class MockVotingRepository implements VotingRepository {
   @override
   void logout() {
     _token = null;
+  }
+
+  @override
+  Future<List<Department>> getDepartments() async {
+    final List<Department> _mockData = [
+      Department(id: '0', name: 'ПАО ГК «ТНС энерго»', voteCount: 9),
+      Department(
+          id: '1', name: 'ПАО «ТНС энерго Ростов-на-Дону»', voteCount: 7),
+      Department(id: '2', name: 'ПАО «ТНС энерго Воронеж»', voteCount: 7),
+      Department(id: '3', name: 'ПАО «ТНС энерго НН»', voteCount: 7),
+      Department(id: '4', name: 'ПАО «ТНС энерго Ярославль»', voteCount: 7),
+      Department(id: '5', name: 'ПАО «ТНС энерго Марий Эл»', voteCount: 7),
+      Department(id: '6', name: 'ПАО «ТНС энерго Кубань»', voteCount: 7),
+      Department(id: '7', name: 'АО «ТНС энерго Тула»', voteCount: 6),
+      Department(id: '8', name: 'АО «ТНС энерго Карелия', voteCount: 7),
+      Department(id: '9', name: 'ООО «ТНС энерго Пенза»', voteCount: 7),
+      Department(
+          id: '10', name: 'ООО «ТНС энерго Великий Новгород»', voteCount: 5),
+    ];
+    await Future.delayed(Duration(milliseconds: 800));
+    if (_token == null) {
+      throw Exception('Токен недействителен');
+    }
+    return _mockData.map((d) => d.copyWith()).toList(); // Отправляем копии
   }
 }
