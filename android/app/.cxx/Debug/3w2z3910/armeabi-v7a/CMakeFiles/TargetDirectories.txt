@@ -1,0 +1,2 @@
+E:/hackDeg2025/tns_voting_service_app/android/app/.cxx/Debug/3w2z3910/armeabi-v7a/CMakeFiles/edit_cache.dir
+E:/hackDeg2025/tns_voting_service_app/android/app/.cxx/Debug/3w2z3910/armeabi-v7a/CMakeFiles/rebuild_cache.dir
