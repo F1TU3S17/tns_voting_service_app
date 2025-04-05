@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
 import 'package:tns_voting_service_app/core/models/question_model.dart';
 import 'package:tns_voting_service_app/theme/theme.dart';
+import 'package:tns_voting_service_app/all_information/presentation/widgets/buttoms_golos.dart';
 
-class InfoScreen extends StatelessWidget {
+class InfoScreen extends StatefulWidget {
   final QuestionShort question;
 
   const InfoScreen({super.key, required this.question});
+
+  @override
+  State<InfoScreen> createState() => _InfoScreenState();
+}
+
+class _InfoScreenState extends State<InfoScreen> {
+  String? selectedOption;
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +24,12 @@ class InfoScreen extends StatelessWidget {
     return Scaffold(
       appBar: GradientAppBar(
         gradient: AppTheme.defaultGradient,
-        title: question.title,
+        title: widget.question.title,
       ),
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(40.0),
+            padding: const EdgeInsets.all(15.0),
             child: Container(
               padding: const EdgeInsets.all(20),
               alignment: Alignment.topCenter,
@@ -48,10 +56,9 @@ class InfoScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            'Дата окончания: ${question.endDate}',
+                            'Дата окончания: ${widget.question.endDate}',
                             style: textTheme.bodySmall?.copyWith(
-                              color:
-                                  theme.colorScheme.onSurface.withOpacity(0.7),
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -66,7 +73,7 @@ class InfoScreen extends StatelessWidget {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                'Проголосовало: ${question.votersCount}/${question.votersTotal}',
+                                'Проголосовало: ${widget.question.votersCount}/${widget.question.votersTotal}',
                                 style: textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.onSurface,
                                 ),
@@ -80,10 +87,135 @@ class InfoScreen extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 0),
                       child: Text(
-                        question.description,
+                        widget.question.description,
                         style: textTheme.bodyLarge,
                         textAlign: TextAlign.left,
                       ),
+                    ),
+                    const SizedBox(height: 32),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 120,
+                          height: 120,
+                          margin: const EdgeInsets.only(right: 20),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: CircularProgressIndicator(
+                                  value: 1.0,
+                                  strokeWidth: 10,
+                                  color: Colors.grey[200],
+                                  backgroundColor: Colors.transparent,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: CircularProgressIndicator(
+                                  value: 0.51,
+                                  strokeWidth: 6,
+                                  color: Colors.green,
+                                  backgroundColor: Colors.transparent,
+                                ),
+                              ),
+                              Transform.rotate(
+                                angle: 0.51 * 2 * 3.1415926535,
+                                child: SizedBox(
+                                  width: 100,
+                                  height: 100,
+                                  child: CircularProgressIndicator(
+                                    value: 0.09,
+                                    strokeWidth: 6,
+                                    color: Colors.orange,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                ),
+                              ),
+                              Transform.rotate(
+                                angle: (0.51 + 0.09) * 2 * 3.1415926535,
+                                child: SizedBox(
+                                  width: 100,
+                                  height: 100,
+                                  child: CircularProgressIndicator(
+                                    value: 0.40,
+                                    strokeWidth: 6,
+                                    color: Colors.red,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                ),
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Голоса',
+                                    style: textTheme.titleMedium,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  RichText(
+                                    text: TextSpan(
+                                      style: textTheme.bodySmall?.copyWith(
+                                        color: theme.colorScheme.onSurface,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: '51%',
+                                          style: TextStyle(color: Colors.green),
+                                        ),
+                                        TextSpan(text: ' / '),
+                                        TextSpan(
+                                          text: '9%',
+                                          style:
+                                              TextStyle(color: Colors.orange),
+                                        ),
+                                        TextSpan(text: ' / '),
+                                        TextSpan(
+                                          text: '40%',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              buildVoteButton(
+                                label: 'Поддержать',
+                                color: Colors.green,
+                                isSelected: selectedOption == 'Поддержать',
+                                onTap: () => setState(
+                                    () => selectedOption = 'Поддержать'),
+                              ),
+                              const SizedBox(height: 8),
+                              buildVoteButton(
+                                label: 'Воздержаться',
+                                color: Colors.orange,
+                                isSelected: selectedOption == 'Воздержаться',
+                                onTap: () => setState(
+                                    () => selectedOption = 'Воздержаться'),
+                              ),
+                              const SizedBox(height: 8),
+                              buildVoteButton(
+                                label: 'Против',
+                                color: Colors.red,
+                                isSelected: selectedOption == 'Против',
+                                onTap: () =>
+                                    setState(() => selectedOption = 'Против'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
