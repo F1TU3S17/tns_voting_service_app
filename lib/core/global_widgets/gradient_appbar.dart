@@ -9,13 +9,13 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Gradient gradient;
 
   const GradientAppBar({
-    Key? key,
+    super.key,
     this.title,
     this.automaticallyImplyLeading = true,
     this.bottom,
     this.elevation = 0,
     required this.gradient,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

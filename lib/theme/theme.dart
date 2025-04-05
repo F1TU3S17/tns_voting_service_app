@@ -23,8 +23,6 @@ abstract class AppTheme {
         onSecondary: Colors.white,
         surface: Colors.white,
         onSurface: Colors.black87,
-        background: Color(0xFFE2E2E2),
-        onBackground: Colors.black87,
         error: Colors.red,
         onError: Colors.white,
         brightness: Brightness.light,

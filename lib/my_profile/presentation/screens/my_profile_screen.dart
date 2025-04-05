@@ -19,6 +19,7 @@ class MyProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
     final List<ProfileMenuItem> menuItems = [
       ProfileMenuItem(
         icon: Icons.history,
@@ -38,64 +39,120 @@ class MyProfileScreen extends StatelessWidget {
     ];
 
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: GradientAppBar(
         gradient: AppTheme.defaultGradient,
         title: "Личный кабинет",
       ),
-      body: Column(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildProfileHeader(context),
+            _buildMenuSection(context, menuItems),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildProfileHeader(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return Container(
+      width: double.infinity, // Растягиваем на всю доступную ширину
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16), // Используем такие же отступы как в _buildMenuSection
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
         children: [
-          Container(
-            color: Colors.white,
-         
-            child: Center(
-              child: Column(
-                children: [
-                  Text('Иванов Иван Иванович',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                      )),
-                  Text('ivaivaiva@tns.ru',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                      )),
-                ],
-              ),
+          CircleAvatar(
+            radius: 50,
+            backgroundColor: theme.primaryColor,
+            child: const Icon(
+              Icons.person,
+              size: 50,
+              color: Colors.white,
             ),
           ),
-          Container(
-            height: 3,
-            color: const Color.fromARGB(173, 76, 175, 79),
+          const SizedBox(height: 16),
+          Text(
+            'Иванов Иван Иванович',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
           ),
-          Expanded(
-            child: Container(
-              child: ListView.separated(
-                itemCount: menuItems.length,
-                separatorBuilder: (context, index) => Container(
-                  height: 1,
-                  color: const Color.fromARGB(172, 1, 1, 1),
-                ),
-                itemBuilder: (context, index) {
-                  final item = menuItems[index];
-                  return ListTile(
-                    leading: Icon(item.icon),
-                    title: Text(
-                      item.title,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                      ),
-                    ),
-                    onTap: item.onTap,
-                    
-                    mouseCursor: SystemMouseCursors.click,
-                  );
-                },
-              ),
+          const SizedBox(height: 8),
+          Text(
+            'ivaivaiva@tns.ru',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Colors.black54,
             ),
           ),
         ],
+      ),
+    );
+  }
+  
+  Widget _buildMenuSection(BuildContext context, List<ProfileMenuItem> menuItems) {
+    final ThemeData theme = Theme.of(context);
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: menuItems.length,
+        separatorBuilder: (context, index) => Divider(
+          height: 1,
+          thickness: 1,
+          indent: 16,
+          endIndent: 16,
+          color: Colors.grey.withOpacity(0.2),
+        ),
+        itemBuilder: (context, index) {
+          final item = menuItems[index];
+          return ListTile(
+            leading: Icon(
+              item.icon,
+              color: theme.primaryColor,
+            ),
+            title: Text(
+              item.title,
+              style: theme.textTheme.titleMedium,
+            ),
+            trailing: const Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Colors.grey,
+            ),
+            onTap: item.onTap,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            mouseCursor: SystemMouseCursors.click,
+          );
+        },
       ),
     );
   }
