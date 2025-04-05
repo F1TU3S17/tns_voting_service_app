@@ -13,6 +13,7 @@ class GosuslugiAuthButton extends StatelessWidget {
     return SizedBox(
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
+          overlayColor: colorScheme.onSurface,
           side: BorderSide(color: colorScheme.onSurface),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),

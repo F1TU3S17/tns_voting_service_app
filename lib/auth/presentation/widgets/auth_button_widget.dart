@@ -25,7 +25,7 @@ class AuthButtonWidget extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 25),
         ),
         onPressed: () async {
           if (model!.validate()) {
