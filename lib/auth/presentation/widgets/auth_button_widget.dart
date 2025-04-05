@@ -27,10 +27,10 @@ class AuthButtonWidget extends StatelessWidget {
           ),
           padding: const EdgeInsets.symmetric(vertical: 16),
         ),
-        onPressed: () {
+        onPressed: () async {
           if (model!.validate()) {
             try {
-              var token = model.auth();
+              token = await model.auth();
               Navigator.popAndPushNamed(context, AppRoutes.main);
             }
             // что-то придумать
