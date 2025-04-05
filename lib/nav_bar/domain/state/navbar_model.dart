@@ -15,9 +15,8 @@ class NavbarModel extends ChangeNotifier {
     _currentIndex = index;
     notifyListeners();
   }
-  
+
   Widget getCurrentPage() {
     return _screens[_currentIndex];
   }
-
 }

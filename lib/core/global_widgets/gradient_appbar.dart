@@ -20,11 +20,15 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: title != null ? Text(title!, style: AppTheme.ligthTheme.textTheme.displaySmall) : null,
-      actions: [Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Image.asset("assets/logoTNS.png"),
-      )],
+      title: title != null
+          ? Text(title!, style: AppTheme.ligthTheme.textTheme.displaySmall)
+          : null,
+      actions: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset("assets/logoTNS.png"),
+        )
+      ],
       automaticallyImplyLeading: automaticallyImplyLeading,
       bottom: bottom,
       elevation: elevation,
@@ -37,5 +41,6 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight + (bottom?.preferredSize.height ?? 0.0));
+  Size get preferredSize =>
+      Size.fromHeight(kToolbarHeight + (bottom?.preferredSize.height ?? 0.0));
 }
