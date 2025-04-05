@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tns_voting_service_app/all_information_story/domain/model/info_story_screen_model.dart';
+import 'package:tns_voting_service_app/all_information_story/domain/model/info_question_screen_model.dart';
 
 class InfoStoryScreenModelProvider extends InheritedNotifier {
   const InfoStoryScreenModelProvider(

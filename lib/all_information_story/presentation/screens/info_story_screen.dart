@@ -8,7 +8,6 @@ import 'package:tns_voting_service_app/all_information_story/presentation/widget
 import 'package:url_launcher/url_launcher.dart';
 
 class InfoStoryScreen extends StatefulWidget {
-  //final QuestionShort question;
   final String questionId;
   const InfoStoryScreen({super.key, required this.questionId});
 
@@ -106,7 +105,7 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                           child: Column(
                             children: [
                               Text(
-                                'Дата окончания: ',
+                                'Дата окончания: ${model.questionDate!}',
                                 style: textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.onSurface,
                                 ),

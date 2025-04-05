@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tns_voting_service_app/all_information_story/domain/model/info_story_screen_model.dart';
+import 'package:tns_voting_service_app/all_information_story/domain/model/info_question_screen_model.dart';
 import 'package:tns_voting_service_app/all_information_story/domain/state/info_story_screen_state.dart';
 import 'package:tns_voting_service_app/all_information_story/presentation/screens/info_story_screen.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
@@ -48,7 +48,8 @@ class _HistoryPageState extends State<HistoryPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) {
-                          final storyModel = InfoStoryScreenModel();
+                          final storyModel =
+                              InfoStoryScreenModel(questions[index].endDate);
                           return InfoStoryScreenModelProvider(
                             model: storyModel,
                             child: InfoStoryScreen(

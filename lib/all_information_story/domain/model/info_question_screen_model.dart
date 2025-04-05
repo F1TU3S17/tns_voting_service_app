@@ -8,6 +8,13 @@ class InfoStoryScreenModel extends ChangeNotifier {
   final VotingRepository repository = RepositoryProvider.getRepository();
   QuestionDetail? questionDetail;
 
+  // ignore: prefer_typing_uninitialized_variables
+  late final questionDate;
+
+  InfoStoryScreenModel(DateTime date) {
+    questionDate = date;
+  }
+
   /// Индикатор состояния загрузки данных.
   ///
   /// `true` - если данные загружаются, `false` - если загрузка завершена.
