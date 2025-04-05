@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tns_voting_service_app/app/app_routes.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
 import 'package:tns_voting_service_app/theme/theme.dart';
 
@@ -29,7 +30,9 @@ class MyProfileScreen extends StatelessWidget {
       ProfileMenuItem(
         icon: Icons.settings,
         title: 'Настройки',
-        onTap: () {},
+        onTap: () {
+          Navigator.pushNamed(context, AppRoutes.settings);
+        },
       ),
       ProfileMenuItem(
         icon: Icons.logout,
