@@ -5,6 +5,7 @@ class HomeScreenModelProvider extends InheritedNotifier {
   const HomeScreenModelProvider({super.key, required this.model, required this.child}) : super(child: child, notifier: model);
 
   final HomeScreenModel model;
+  @override
   final Widget child;
 
   static HomeScreenModelProvider? of(BuildContext context) {

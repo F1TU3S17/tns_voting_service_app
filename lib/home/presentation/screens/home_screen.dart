@@ -4,7 +4,6 @@ import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart'
 import 'package:tns_voting_service_app/core/models/question_model.dart';
 import 'package:tns_voting_service_app/home/domain/model/home_screen_model.dart';
 import 'package:tns_voting_service_app/home/domain/state/home_screen_model_provider/home_screen_model_provider.dart';
-import 'package:tns_voting_service_app/theme/theme.dart';
 import 'package:tns_voting_service_app/home/presentation/widgets/session_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -31,44 +30,53 @@ class _HomePageState extends State<HomePage> {
         return Stack(children: [
           Scaffold(
             appBar: GradientAppBar(
-              gradient: AppTheme.defaultGradient,
               title: "Главная",
             ),
             body: RefreshIndicator(
-              color: theme.primaryColor,
+              color: theme.iconTheme.color,
               onRefresh: () async {
                 await model.initQuestions();
               },
               child: ListView.builder(
-                itemCount: model.questions.length,
-                itemBuilder: (context, index) {
-                  final List<QuestionShort> questions = model.questions;
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => InfoScreen(
-                            question: questions[index],
+                  itemCount: model.questions.length,
+                  itemBuilder: (context, index) {
+                    final List<QuestionShort> questions = model.questions;
+                    return Stack(
+                      clipBehavior: Clip.antiAlias,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 4.0),
+                          child: SessionCard(
+                            title: questions[index].title,
+                            description: questions[index].description,
+                            sessionType: "Заочно",
+                            votesInfo:
+                                "Голоса: ${questions[index].votersCount}/${questions[index].votersTotal}",
+                            date: questions[index].endDate,
                           ),
                         ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 2.0, horizontal: 8.0),
-                      child: SessionCard(
-                        title: questions[index].title,
-                        description: questions[index].description,
-                        sessionType: "Заочно",
-                        votesInfo:
-                            "Голоса: ${questions[index].votersCount}/${questions[index].votersTotal}",
-                        date: questions[index].endDate,
-                      ),
-                    ),
-                  );
-                },
-              ),
+                        Positioned.fill(
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => InfoScreen(
+                                    question: questions[index],
+                                  ),
+                                ),
+                              ),
+                              customBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    12), // Совпадает с радиусом карточки
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
             ),
           ),
           if (model.isLoadind)

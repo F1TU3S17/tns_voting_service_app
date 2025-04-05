@@ -9,13 +9,13 @@ class SessionCard extends StatelessWidget {
   final DateTime date;
 
   const SessionCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.description,
     required this.sessionType,
     required this.votesInfo,
     required this.date
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +144,7 @@ class _SessionMetadata extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.person_2_outlined, color: theme.colorScheme.secondary),
+              Icon(Icons.person_2_outlined),
               Expanded(
                 child: Text(
                   sessionType,
@@ -158,7 +158,7 @@ class _SessionMetadata extends StatelessWidget {
           ),
           Row(
             children: [
-              Icon(Icons.bolt, color: theme.colorScheme.secondary,),
+              Icon(Icons.bolt),
               Expanded(
                 child: Text(
                   votesInfo,

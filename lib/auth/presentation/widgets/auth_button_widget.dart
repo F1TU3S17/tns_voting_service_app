@@ -3,6 +3,7 @@ import 'package:tns_voting_service_app/app/app_routes.dart';
 import 'package:tns_voting_service_app/auth/domain/model/auth_screen_model.dart';
 import 'package:tns_voting_service_app/auth/domain/state/auth_state_model_provider.dart';
 
+// ignore: must_be_immutable
 class AuthButtonWidget extends StatelessWidget {
   AuthButtonWidget({
     super.key,
