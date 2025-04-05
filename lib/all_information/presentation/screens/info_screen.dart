@@ -1,11 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tns_voting_service_app/all_information/domain/state/info_screen_state.dart';
+import 'package:tns_voting_service_app/all_information/presentation/widgets/buttoms_golos.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
-import 'package:tns_voting_service_app/all_information_story/presentation/widgets/buttoms_golos.dart';
 import 'package:tns_voting_service_app/core/utils/parse_date.dart';
 import 'package:url_launcher/url_launcher.dart';
 
