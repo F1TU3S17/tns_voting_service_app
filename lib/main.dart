@@ -5,5 +5,5 @@ import 'package:tns_voting_service_app/app/my_app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  runApp(const TnsApp());
+  runApp(TnsApp());
 }
