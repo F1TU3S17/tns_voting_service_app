@@ -90,7 +90,7 @@ class MyProfileScreen extends StatelessWidget {
             child: Icon(
               Icons.person,
               size: 50,
-              color: theme.colorScheme.onPrimary,
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 16),
