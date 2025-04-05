@@ -1,4 +1,10 @@
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:path/path.dart' as path;
 import 'package:tns_voting_service_app/core/database/app_database.dart';
 import 'package:tns_voting_service_app/core/models/question_model.dart';
 import 'package:tns_voting_service_app/core/repository/repository_provider.dart';
@@ -14,7 +20,6 @@ class InfoScreenModel extends ChangeNotifier {
   late final questionDate;
 
   int? voteOptionId;
-
 
   InfoScreenModel(DateTime date) {
     questionDate = date;
@@ -36,6 +41,10 @@ class InfoScreenModel extends ChangeNotifier {
     isLoading = false;
   }
 
+  Future<String> downloadFile(String fileId, String fileName) async {
+    return await repository.downloadFile(fileId, fileName);
+  }
+
   Future<int?> getVote(String questionId) async {
     return await AppDatabase.getVote(questionId);
   }
@@ -50,7 +59,7 @@ class InfoScreenModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String? getVoteTextByVoteId(){
+  String? getVoteTextByVoteId() {
     return _voteOptions[voteOptionId];
   }
 

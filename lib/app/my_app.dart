@@ -5,6 +5,7 @@ import 'package:tns_voting_service_app/app/state/app_model_provider.dart';
 import 'package:tns_voting_service_app/auth/presentation/screens/auth_screen.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
 import 'package:tns_voting_service_app/core/utils/get_current_theme.dart';
+import 'package:tns_voting_service_app/department_select/presentation/department_select_screen.dart';
 import 'package:tns_voting_service_app/history/presentation/screens/history_screen.dart';
 import 'package:tns_voting_service_app/my_profile/presentation/screens/settings_screeen.dart';
 import 'package:tns_voting_service_app/nav_bar/presentation/widgets/main_navigation.dart';
@@ -44,13 +45,15 @@ class AppCore extends StatelessWidget {
           )
         : MaterialApp(
             theme: getCurrentTheme(appModel.isDarkTheme),
-            home:
-                token == null ? AuthorizationScreen() : const MainNavigation(),
+            home: token == null
+                ? AuthorizationScreen()
+                : DepartmentSelectScreen(),
             routes: ({
               AppRoutes.settings: (context) => const SettingsScreeen(),
               AppRoutes.auth: (context) => AuthorizationScreen(),
               AppRoutes.voteStory: (context) => const HistoryPage(),
               AppRoutes.main: (context) => const MainNavigation(),
+              AppRoutes.departmentSelect: (context) => DepartmentSelectScreen(),
             }),
           );
   }

@@ -7,6 +7,7 @@ import 'package:tns_voting_service_app/all_information/presentation/widgets/butt
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
 import 'package:tns_voting_service_app/core/utils/parse_date.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:open_file/open_file.dart';
 
 class InfoScreen extends StatefulWidget {
   final String questionId;
@@ -232,6 +233,82 @@ class _InfoScreenState extends State<InfoScreen> {
                             itemBuilder: (context, index) {
                               final file = model.questionDetail!.files[index];
                               return InkWell(
+                                onTap:() async{
+                                  try {
+                                    // Показываем индикатор загрузки в виде диалога
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return Dialog(
+                                          backgroundColor: theme.scaffoldBackgroundColor,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(20.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                CircularProgressIndicator(),
+                                                SizedBox(height: 16),
+                                                Text('Загрузка файла...'),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                    
+                                    // Скачиваем файл
+                                    final result = await model.downloadFile(file.id, file.name);
+                                    
+                                    // Закрываем диалог загрузки
+                                    Navigator.of(context).pop();
+                                    
+                                    // Проверяем результат
+                                    if (result.isEmpty) {
+                                      throw Exception('Путь к файлу пустой');
+                                    }
+                                    
+                                    // Проверяем существование файла
+                                    final fileExists = await File(result).exists();
+                                    if (!fileExists) {
+                                      throw Exception('Файл не найден: $result');
+                                    }
+                                    
+                                    // Открываем файл с учетом особенностей платформы
+                                    if (Platform.isIOS) {
+                                      // На iOS иногда бывают проблемы с определенными символами в пути
+                                      // Лучше использовать URL-кодирование для пути
+                                      final fileUri = Uri.file(result);
+                                      final openResult = await OpenFile.open(result);
+                                      if (openResult.type != ResultType.done) {
+                                        throw Exception('Не удалось открыть файл: ${openResult.message}');
+                                      }
+                                    } else {
+                                      // Для Android и других платформ
+                                      final openResult = await OpenFile.open(result);
+                                      if (openResult.type != ResultType.done) {
+                                        throw Exception('Не удалось открыть файл: ${openResult.message}');
+                                      }
+                                    }
+                                  } catch (e) {
+                                    // Закрываем диалог загрузки если он открыт
+                                    if (Navigator.canPop(context)) {
+                                      Navigator.of(context).pop();
+                                    }
+                                    
+                                    // Показываем ошибку
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Ошибка: ${e.toString()}'),
+                                        backgroundColor: Colors.red,
+                                        duration: Duration(seconds: 5),
+                                      ),
+                                    );
+                                    
+                                    // Для отладки выводим в консоль
+                                    print('Ошибка при работе с файлом: $e');
+                                  }
+                                },
                                 borderRadius: BorderRadius.circular(8),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(

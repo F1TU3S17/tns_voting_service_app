@@ -8,4 +8,5 @@ abstract class AppRoutes {
   static const String voteList = '/vote_list';
   static const String voteStory = '/vote_story';
   static const String main = '/main';
+  static const String departmentSelect = '/department';
 }
