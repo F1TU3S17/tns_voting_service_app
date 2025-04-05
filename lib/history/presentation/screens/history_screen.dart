@@ -4,7 +4,6 @@ import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart'
 import 'package:tns_voting_service_app/core/models/question_model.dart';
 import 'package:tns_voting_service_app/history/domain/model/history_screen_state.dart';
 import 'package:tns_voting_service_app/history/domain/state/history_screen_model.dart';
-import 'package:tns_voting_service_app/theme/theme.dart';
 import 'package:tns_voting_service_app/history/presentation/widgets/session_cards.dart';
 
 class HistoryPage extends StatefulWidget {

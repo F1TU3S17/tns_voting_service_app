@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
-import 'package:tns_voting_service_app/theme/theme.dart';
 
 class AuthorizationScreen extends StatelessWidget {
   const AuthorizationScreen({super.key});
@@ -30,8 +29,8 @@ class AuthorizationScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Логин',
-                  hintStyle:
-                      TextStyle(color: colorScheme.onSurface.withOpacity(0.6)),
+                  hintStyle: TextStyle(
+                      color: colorScheme.onSurface.withValues(alpha: 0.6)),
                 ),
               ),
             ),

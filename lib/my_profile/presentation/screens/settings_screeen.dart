@@ -15,7 +15,7 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
   bool darkModeEnabled = false;
   String selectedLanguage = "Русский";
   bool biometricEnabled = false;
-  
+
   @override
   Widget build(BuildContext context) {
     final appModel = AppModelProvider.of(context)!.appModel;
@@ -31,18 +31,20 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
             children: [
               SmallSwitchListTile(
                 title: Text("Тёмная тема", style: theme.textTheme.bodyMedium),
-                subtitle: Text("Включить тёмный режим приложения", style: theme.textTheme.bodySmall),
+                subtitle: Text("Включить тёмный режим приложения",
+                    style: theme.textTheme.bodySmall),
                 secondary: Icon(Icons.dark_mode),
                 value: darkModeEnabled,
-                onChanged: (value) async{
-                    appModel.setAppTheme(value);
+                onChanged: (value) async {
+                  appModel.setAppTheme(value);
                 },
               ),
               const Divider(),
               ListTile(
                 leading: Icon(Icons.language),
                 title: Text("Язык", style: theme.textTheme.bodyMedium),
-                subtitle: Text("Выберите язык интерфейса", style: theme.textTheme.bodySmall),
+                subtitle: Text("Выберите язык интерфейса",
+                    style: theme.textTheme.bodySmall),
                 trailing: DropdownButton<String>(
                   value: selectedLanguage,
                   underline: Container(),
@@ -63,14 +65,14 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
               ),
             ],
           ),
-          
           const SizedBox(height: 24),
           _buildSectionHeader(theme, "Уведомления"),
           _buildSettingsCard(
             children: [
               SmallSwitchListTile(
                 title: Text("Уведомления", style: theme.textTheme.bodyMedium),
-                subtitle: Text("Получать уведомления о новых голосованиях", style: theme.textTheme.bodySmall),
+                subtitle: Text("Получать уведомления о новых голосованиях",
+                    style: theme.textTheme.bodySmall),
                 secondary: Icon(Icons.notifications),
                 value: notificationsEnabled,
                 onChanged: (value) {
@@ -79,19 +81,23 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
                   });
                 },
               ),
-              if (notificationsEnabled) ... [
+              if (notificationsEnabled) ...[
                 const Divider(),
                 CheckboxListTile(
-                  title: Text("Новые голосования", style: theme.textTheme.bodyMedium),
-                  subtitle: Text("Уведомлять при появлении новых голосований", style: theme.textTheme.bodySmall),
+                  title: Text("Новые голосования",
+                      style: theme.textTheme.bodyMedium),
+                  subtitle: Text("Уведомлять при появлении новых голосований",
+                      style: theme.textTheme.bodySmall),
                   secondary: Icon(Icons.how_to_vote),
                   value: true,
                   onChanged: (value) {},
                 ),
                 const Divider(),
                 CheckboxListTile(
-                  title: Text("Результаты голосований", style: theme.textTheme.bodyMedium),
-                  subtitle: Text("Уведомлять о публикации результатов", style: theme.textTheme.bodySmall),
+                  title: Text("Результаты голосований",
+                      style: theme.textTheme.bodyMedium),
+                  subtitle: Text("Уведомлять о публикации результатов",
+                      style: theme.textTheme.bodySmall),
                   secondary: Icon(Icons.insert_chart),
                   value: false,
                   onChanged: (value) {},
@@ -99,14 +105,16 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
               ],
             ],
           ),
-          
           const SizedBox(height: 24),
           _buildSectionHeader(theme, "Безопасность"),
           _buildSettingsCard(
             children: [
               SmallSwitchListTile(
-                title: Text("Биометрическая аутентификация", style: theme.textTheme.bodyMedium),
-                subtitle: Text("Использовать отпечаток пальца или Face ID для входа", style: theme.textTheme.bodySmall),
+                title: Text("Биометрическая аутентификация",
+                    style: theme.textTheme.bodyMedium),
+                subtitle: Text(
+                    "Использовать отпечаток пальца или Face ID для входа",
+                    style: theme.textTheme.bodySmall),
                 secondary: Icon(Icons.fingerprint),
                 value: biometricEnabled,
                 onChanged: (value) {
@@ -117,20 +125,21 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
               ),
             ],
           ),
-          
           const SizedBox(height: 24),
           _buildSectionHeader(theme, "О приложении"),
           _buildSettingsCard(
             children: [
               ListTile(
                 leading: Icon(Icons.info_outline),
-                title: Text("Версия приложения", style: theme.textTheme.bodyMedium),
+                title: Text("Версия приложения",
+                    style: theme.textTheme.bodyMedium),
                 subtitle: Text("1.0.0", style: theme.textTheme.bodySmall),
               ),
               const Divider(),
               ListTile(
                 leading: Icon(Icons.policy),
-                title: Text("Политика конфиденциальности", style: theme.textTheme.bodyMedium),
+                title: Text("Политика конфиденциальности",
+                    style: theme.textTheme.bodyMedium),
                 trailing: Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {},
               ),
@@ -143,13 +152,12 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
               ),
             ],
           ),
-          
           const SizedBox(height: 40),
         ],
       ),
     );
   }
-  
+
   Widget _buildSectionHeader(ThemeData theme, String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 8),
@@ -161,7 +169,7 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
       ),
     );
   }
-  
+
   Widget _buildSettingsCard({required List<Widget> children}) {
     final theme = Theme.of(context);
     return Container(
@@ -171,7 +179,7 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: theme.shadowColor.withOpacity(0.1),
+            color: theme.shadowColor.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -181,4 +189,3 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
     );
   }
 }
-

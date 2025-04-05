@@ -39,7 +39,8 @@ class MyProfileScreen extends StatelessWidget {
         icon: Icons.logout,
         title: 'Выйти',
         onTap: () {
-          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.auth, (rou) => false);
+          Navigator.pushNamedAndRemoveUntil(
+              context, AppRoutes.auth, (rou) => false);
         },
       ),
     ];
