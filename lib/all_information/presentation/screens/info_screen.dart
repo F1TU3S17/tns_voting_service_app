@@ -6,6 +6,8 @@ import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart'
 import 'package:tns_voting_service_app/core/utils/parse_date.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:open_file/open_file.dart';
+import 'package:tns_voting_service_app/core/utils/open_ics_file.dart'; // Добавляем импорт
+import 'package:tns_voting_service_app/core/entity/calendar_event.dart'; // Добавляем импорт
 
 class InfoScreen extends StatefulWidget {
   final String questionId;
@@ -25,7 +27,7 @@ class _InfoScreenState extends State<InfoScreen> {
   // Метод для открытия ссылки в браузере
   Future<void> _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)){
+    if (await canLaunchUrl(uri)) {
       await launchUrl(
         uri,
         mode: LaunchMode.externalApplication,
@@ -34,11 +36,51 @@ class _InfoScreenState extends State<InfoScreen> {
           enableDomStorage: true,
         ),
       );
-    } 
-    else {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Не удалось открыть ссылку')),
       );
+    }
+  }
+
+  // Метод для добавления события в календарь
+  Future<void> _addToCalendar(BuildContext context) async {
+    try {
+      final model = InfoScreenModelProvider.of(context)!.model;
+
+      // Создаем событие календаря из данных вопроса
+      final calendarEvent = CalendarEvent(
+        title: model.questionDetail!.title,
+        description: model.questionDetail!.description,
+        startTime: model.questionDate!
+            .subtract(Duration(hours: 1)), // Начало за час до окончания
+        endTime: model.questionDate!, // Дата окончания голосования
+        location: model.questionDetail?.conferenceLink ??
+            "Онлайн", // Используем ссылку на конференцию если есть
+      );
+
+      // Используем нашу функцию для создания и открытия ICS-файла
+      final result = await createAndOpenIcsForEvent(
+        calendarEvent,
+        context: context,
+      );
+
+      if (result) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Событие добавлено в календарь'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ошибка при добавлении в календарь: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      debugPrint('Ошибка добавления в календарь: $e');
     }
   }
 
@@ -48,16 +90,16 @@ class _InfoScreenState extends State<InfoScreen> {
     final textTheme = theme.textTheme;
     final model = InfoScreenModelProvider.of(context)!.model;
     selectedOption = model.getVoteTextByVoteId();
-    
+
     // Определение цветов в зависимости от темы
     final isDark = theme.brightness == Brightness.dark;
     final backgroundColor = isDark ? theme.colorScheme.surface : Colors.white;
-    final borderColor = isDark ? theme.colorScheme.primaryContainer : theme.colorScheme.primary;
+    final borderColor =
+        isDark ? theme.colorScheme.primaryContainer : theme.colorScheme.primary;
     final cardColor = isDark ? theme.colorScheme.surfaceVariant : Colors.white;
     final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
     final dividerColor = isDark ? Colors.white24 : Colors.grey.shade300;
 
-  
     if (isFirstBuild) {
       model.initQuestionDetail(widget.questionId);
       isFirstBuild = false;
@@ -74,7 +116,8 @@ class _InfoScreenState extends State<InfoScreen> {
             ),
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(left: 8, top: 20, right: 8, bottom: 16),
+                padding: const EdgeInsets.only(
+                    left: 8, top: 20, right: 8, bottom: 16),
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   alignment: Alignment.topCenter,
@@ -107,9 +150,9 @@ class _InfoScreenState extends State<InfoScreen> {
                           textColor: textColor,
                           iconColor: theme.colorScheme.secondary,
                         ),
-                        
+
                         const SizedBox(height: 12),
-                        
+
                         // Информация об участниках
                         _buildInfoSection(
                           icon: Icons.people,
@@ -119,9 +162,9 @@ class _InfoScreenState extends State<InfoScreen> {
                           textColor: textColor,
                           iconColor: theme.colorScheme.secondary,
                         ),
-                        
+
                         const SizedBox(height: 12),
-                        
+
                         // Тип принятия решения
                         _buildInfoSection(
                           icon: Icons.how_to_vote,
@@ -131,25 +174,28 @@ class _InfoScreenState extends State<InfoScreen> {
                           textColor: textColor,
                           iconColor: theme.colorScheme.secondary,
                         ),
-                        
+
                         const SizedBox(height: 12),
-                        
+
                         // Количество проголосовавших
                         _buildInfoSection(
                           icon: Icons.bolt,
                           title: 'Проголосовало:',
-                          value: '${model.questionDetail?.votersCount}/${model.questionDetail?.votersTotal}',
+                          value:
+                              '${model.questionDetail?.votersCount}/${model.questionDetail?.votersTotal}',
                           textTheme: textTheme,
                           textColor: textColor,
                           iconColor: theme.colorScheme.secondary,
                         ),
-                        
+
                         // Ссылка на конференцию, если она есть
-                        if (model.questionDetail?.conferenceLink != null && 
-                            model.questionDetail!.conferenceLink.isNotEmpty) ...[
+                        if (model.questionDetail?.conferenceLink != null &&
+                            model
+                                .questionDetail!.conferenceLink.isNotEmpty) ...[
                           const SizedBox(height: 12),
                           InkWell(
-                            onTap: () => _launchURL(model.questionDetail!.conferenceLink),
+                            onTap: () => _launchURL(
+                                model.questionDetail!.conferenceLink),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -161,7 +207,8 @@ class _InfoScreenState extends State<InfoScreen> {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Ссылка на конференцию:',
@@ -183,12 +230,28 @@ class _InfoScreenState extends State<InfoScreen> {
                               ],
                             ),
                           ),
+                          const SizedBox(height: 12),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              _addToCalendar(context);
+                            },
+                            icon: Icon(Icons.calendar_today, size: 18),
+                            label: Text('Импортировать в календарь'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  theme.colorScheme.secondaryContainer,
+                              foregroundColor:
+                                  theme.colorScheme.onSecondaryContainer,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                              textStyle: TextStyle(fontSize: 12),
+                              visualDensity: VisualDensity.compact,
+                            ),
+                          ),
                         ],
-                        
-                        const SizedBox(height: 16),
                         Divider(color: dividerColor, thickness: 1),
                         const SizedBox(height: 12),
-                        
+
                         // Секция с прикрепленными файлами
                         if (model.questionDetail!.files.isNotEmpty) ...[
                           Align(
@@ -211,7 +274,7 @@ class _InfoScreenState extends State<InfoScreen> {
                             itemBuilder: (context, index) {
                               final file = model.questionDetail!.files[index];
                               return InkWell(
-                                onTap:() async{
+                                onTap: () async {
                                   try {
                                     // Показываем индикатор загрузки в виде диалога
                                     showDialog(
@@ -219,7 +282,8 @@ class _InfoScreenState extends State<InfoScreen> {
                                       barrierDismissible: false,
                                       builder: (BuildContext context) {
                                         return Dialog(
-                                          backgroundColor: theme.scaffoldBackgroundColor,
+                                          backgroundColor:
+                                              theme.scaffoldBackgroundColor,
                                           child: Padding(
                                             padding: const EdgeInsets.all(20.0),
                                             child: Column(
@@ -234,38 +298,45 @@ class _InfoScreenState extends State<InfoScreen> {
                                         );
                                       },
                                     );
-                                    
+
                                     // Скачиваем файл
-                                    final result = await model.downloadFile(file.id, file.name);
-                                    
+                                    final result = await model.downloadFile(
+                                        file.id, file.name);
+
                                     // Закрываем диалог загрузки
                                     Navigator.of(context).pop();
-                                    
+
                                     // Проверяем результат
                                     if (result.isEmpty) {
                                       throw Exception('Путь к файлу пустой');
                                     }
-                                    
+
                                     // Проверяем существование файла
-                                    final fileExists = await File(result).exists();
+                                    final fileExists =
+                                        await File(result).exists();
                                     if (!fileExists) {
-                                      throw Exception('Файл не найден: $result');
+                                      throw Exception(
+                                          'Файл не найден: $result');
                                     }
-                                    
+
                                     // Открываем файл с учетом особенностей платформы
                                     if (Platform.isIOS) {
                                       // На iOS иногда бывают проблемы с определенными символами в пути
                                       // Лучше использовать URL-кодирование для пути
                                       final fileUri = Uri.file(result);
-                                      final openResult = await OpenFile.open(result);
+                                      final openResult =
+                                          await OpenFile.open(result);
                                       if (openResult.type != ResultType.done) {
-                                        throw Exception('Не удалось открыть файл: ${openResult.message}');
+                                        throw Exception(
+                                            'Не удалось открыть файл: ${openResult.message}');
                                       }
                                     } else {
                                       // Для Android и других платформ
-                                      final openResult = await OpenFile.open(result);
+                                      final openResult =
+                                          await OpenFile.open(result);
                                       if (openResult.type != ResultType.done) {
-                                        throw Exception('Не удалось открыть файл: ${openResult.message}');
+                                        throw Exception(
+                                            'Не удалось открыть файл: ${openResult.message}');
                                       }
                                     }
                                   } catch (e) {
@@ -273,16 +344,17 @@ class _InfoScreenState extends State<InfoScreen> {
                                     if (Navigator.canPop(context)) {
                                       Navigator.of(context).pop();
                                     }
-                                    
+
                                     // Показываем ошибку
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text('Ошибка: ${e.toString()}'),
+                                        content:
+                                            Text('Ошибка: ${e.toString()}'),
                                         backgroundColor: Colors.red,
                                         duration: Duration(seconds: 5),
                                       ),
                                     );
-                                    
+
                                     // Для отладки выводим в консоль
                                     print('Ошибка при работе с файлом: $e');
                                   }
@@ -317,7 +389,8 @@ class _InfoScreenState extends State<InfoScreen> {
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                      Icon(Icons.chevron_right, color: textColor),
+                                      Icon(Icons.chevron_right,
+                                          color: textColor),
                                     ],
                                   ),
                                 ),
@@ -411,7 +484,7 @@ class _InfoScreenState extends State<InfoScreen> {
             ),
           );
   }
-  
+
   // Виджет для отображения информационных секций
   Widget _buildInfoSection({
     required IconData icon,
