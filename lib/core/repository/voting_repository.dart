@@ -23,7 +23,8 @@ abstract class VotingRepository {
   
   /// Проверка авторизации
   bool get isAuthenticated;
-  
+
+
   /// Выход из системы
   void logout();
 }
