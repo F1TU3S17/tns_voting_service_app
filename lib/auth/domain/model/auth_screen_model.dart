@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tns_voting_service_app/core/database/app_database.dart';
 import 'package:tns_voting_service_app/core/models/login_model.dart';
 import 'package:tns_voting_service_app/core/repository/repository_provider.dart';
 import 'package:tns_voting_service_app/core/repository/voting_repository.dart';
@@ -65,10 +66,22 @@ class AuthScreenModel extends ChangeNotifier {
   Future<String> auth() async {
     _isLoading = true;
     notifyListeners();
-    LoginResponse response = await repository.login(login, password);
-    if (response.token.isEmpty) throw ("empty token exeption");
-    _isLoading = false;
-    notifyListeners();
-    return response.token;
+    try {
+      LoginResponse response = await repository.login(login, password);
+      _isLoading = false;
+      AppDatabase.saveToken(response.token);
+      if (response.token.isEmpty) {
+        _loginError = "Такого пользоваателя не существует";
+        throw ("empty token exeption");
+      }
+      notifyListeners();
+      return response.token;
+    } catch (ex) {
+      _loginError = "Такого пользоваателя не существует";
+      print(ex);
+      _isLoading = false;
+      notifyListeners();
+      return "";
+    }
   }
 }

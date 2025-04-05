@@ -7,6 +7,7 @@ class AppModel extends ChangeNotifier {
   /// `true` - данные загружаются, `false` - загрузка завершена.
   bool isLoading = true;
   bool isDarkTheme = false;
+  String? token;
 
   AppModel() {
     init();
@@ -15,16 +16,15 @@ class AppModel extends ChangeNotifier {
   /// Инициализация модели приложения.
   ///
   /// Устанавливает состояние загрузки в `true`, затем выполняет необходимые операции и устанавливает состояние загрузки в `false`.
-  Future<void> init() async{
+  Future<void> init() async {
     isLoading = true;
-    
     await getCurrentTheme();
-
-    notifyListeners();
+    token = await AppDatabase.getToken();
     isLoading = false;
+    notifyListeners();
   }
 
-  Future<void> getCurrentTheme() async{
+  Future<void> getCurrentTheme() async {
     AppDatabase.getAppTheme().then((value) {
       isDarkTheme = value;
       notifyListeners();
@@ -37,6 +37,4 @@ class AppModel extends ChangeNotifier {
     await AppDatabase.setAppTheme(isDarkTheme);
     notifyListeners();
   }
-
-
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tns_voting_service_app/app/app_routes.dart';
+import 'package:tns_voting_service_app/auth/domain/model/auth_screen_model.dart';
+import 'package:tns_voting_service_app/core/database/app_database.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
 
 class ProfileMenuItem {
@@ -19,6 +21,7 @@ class MyProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = AuthScreenModel();
     final ThemeData theme = Theme.of(context);
     final List<ProfileMenuItem> menuItems = [
       ProfileMenuItem(
@@ -41,6 +44,7 @@ class MyProfileScreen extends StatelessWidget {
         onTap: () {
           Navigator.pushNamedAndRemoveUntil(
               context, AppRoutes.auth, (rou) => false);
+          AppDatabase.deleteToken();
         },
       ),
     ];
