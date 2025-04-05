@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tns_voting_service_app/all_information/presentation/screens/info_screen.dart';
+import 'package:tns_voting_service_app/all_information/domain/model/info_screen_model.dart';
+import 'package:tns_voting_service_app/all_information/domain/state/info_screen_state.dart';
+import 'package:tns_voting_service_app/all_information/presentation/screens/info_screen.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
 import 'package:tns_voting_service_app/core/models/question_model.dart';
 import 'package:tns_voting_service_app/home/domain/model/home_screen_model.dart';
@@ -67,9 +70,23 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    final storyModel = InfoScreenModel(
+                                        questions[index].endDate);
+                                    return InfoScreenModelProvider(
+                                      model: storyModel,
+                                      child: InfoScreen(
+                                        questionId: model.questions[index].id,
+                                      ),
+                                    );
+                                  }),
+                                );
+                              },
                               customBorder: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    12), // Совпадает с радиусом карточки
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                           ),

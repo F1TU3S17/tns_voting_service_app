@@ -118,6 +118,17 @@ class MockVotingRepository implements VotingRepository {
 
   @override
   Future<File> downloadFile(String fileId, String savePath) async {
+    final Map<String, dynamic> attachedFiles = {
+      "1": {'name': 'Test1.pdf', 'path': 'assets/pdf/Test1.pdf'},
+      "2": {'name': 'ИНП.pdf', 'path': 'assets/pdf/INP.pdf'},
+      "3": {'name': 'Test1_2.pdf', 'path': 'assets/pdf/Test1_2.pdf'},
+      "4": {'name': 'Логотип ТНС', 'path': 'assets/logoTNS.png'},
+      "5": {'name': 'Логотип ТНС 2', 'path': 'assets/logoTNS2.png'},
+      "6": {'name': 'Госуслуги', 'path': 'assets/gosusl.png'},
+    };
+
+    Map<String, String> fileInfo = attachedFiles[fileId];
+
     await Future.delayed(Duration(seconds: 1));
     if (_token == null) {
       throw Exception('Токен недействителен');
@@ -126,12 +137,6 @@ class MockVotingRepository implements VotingRepository {
     final fileContent = _files[fileId];
     if (fileContent == null) {
       throw Exception('Файл не найден');
-    }
-
-    // Если savePath не задан явно, создаем временный файл
-    if (savePath.isEmpty) {
-      //final directory = await getTemporaryDirectory();
-      //savePath = '${directory.path}/mock_file_$fileId.pdf';
     }
 
     final file = File(savePath);

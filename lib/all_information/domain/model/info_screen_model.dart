@@ -8,20 +8,26 @@ class InfoScreenModel extends ChangeNotifier {
   final VotingRepository repository = RepositoryProvider.getRepository();
 
   /// Список вопросов для отображения на домашней странице.
-  List<QuestionShort> questions = [];
+  QuestionDetail? questionDetail;
+  // ignore: prefer_typing_uninitialized_variables
+  late final questionDate;
+
+  InfoScreenModel(DateTime date) {
+    questionDate = date;
+  }
 
   /// Индикатор состояния загрузки данных.
   ///
   /// `true` - если данные загружаются, `false` - если загрузка завершена.
-  bool isLoadind = true;
+  bool isLoading = true;
 
   /// Инициализирует список вопросов из репозитория.
   /// Устанавливает флаг загрузки в начале и конце операции.
   /// Уведомляет слушателей об обновлении данных.
-  Future<void> initQuestions() async {
-    isLoadind = true;
-    questions = await repository.getQuestions();
+  Future<void> initQuestionDetail(String questionId) async {
+    isLoading = true;
+    questionDetail = (await repository.getQuestionDetails(questionId));
     notifyListeners();
-    isLoadind = false;
+    isLoading = false;
   }
 }
