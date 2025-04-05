@@ -13,4 +13,3 @@ class TnsApp extends StatelessWidget {
     );
   }
 }
-

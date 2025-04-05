@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:tns_voting_service_app/auth/domain/model/auth_screen_model.dart';
 
-class AuthScreenModelProvider extends InheritedNotifier {
-  const AuthScreenModelProvider(
-      {super.key, required this.model, required this.child})
-      : super(child: child, notifier: model);
+class AuthScreenModelProvider extends InheritedNotifier<AuthScreenModel> {
+  const AuthScreenModelProvider({
+    super.key,
+    required super.child,
+    required AuthScreenModel model,
+  }) : super(notifier: model);
 
-  final AuthScreenModel model;
-  final Widget child;
-
-  static AuthScreenModelProvider? of(BuildContext context) {
+  static AuthScreenModel? of(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<AuthScreenModelProvider>();
+        .dependOnInheritedWidgetOfExactType<AuthScreenModelProvider>()
+        ?.notifier;
   }
 }
