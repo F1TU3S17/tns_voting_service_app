@@ -160,8 +160,9 @@ class MockVotingRepository implements VotingRepository {
         }
       } else if (Platform.isIOS) {
         // iOS-специфичный код
-        // На iOS используем стандартную директорию документов приложения
-        directory = await getApplicationDocumentsDirectory();
+        // Для iOS лучше использовать временную директорию для файлов,
+        // которые будут открываться другими приложениями
+        directory = await getTemporaryDirectory();
       } else {
         // Для других платформ
         directory = await getApplicationDocumentsDirectory();
@@ -180,7 +181,18 @@ class MockVotingRepository implements VotingRepository {
       // Проверяем, существует ли файл уже
       if (await file.exists()) {
         debugPrint('Файл уже существует: $filePath');
-        return filePath;
+        
+        // Для iOS проверяем размер файла, чтобы убедиться, что он не поврежден
+        if (Platform.isIOS) {
+          final fileSize = await file.length();
+          if (fileSize <= 0) {
+            debugPrint('Существующий файл имеет нулевой размер, загрузим заново');
+          } else {
+            return filePath;
+          }
+        } else {
+          return filePath;
+        }
       }
 
       final url =
@@ -190,8 +202,19 @@ class MockVotingRepository implements VotingRepository {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
+        // Проверяем наличие контента
+        if (response.bodyBytes.isEmpty) {
+          throw Exception('Получен пустой файл');
+        }
+        
         // Сохраняем файл
         await file.writeAsBytes(response.bodyBytes);
+        
+        // Проверяем, что файл действительно сохранен
+        if (!await file.exists() || await file.length() <= 0) {
+          throw Exception('Файл не сохранен или имеет нулевой размер');
+        }
+        
         debugPrint('Файл успешно сохранен: $filePath');
         return filePath;
       } else {
