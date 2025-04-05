@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tns_voting_service_app/aftorization/presentation/screens/aftorization_screen.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
 import 'package:tns_voting_service_app/history/presentation/screens/history_screen.dart';
 import 'package:tns_voting_service_app/theme/theme.dart';
@@ -43,7 +44,13 @@ class MyProfileScreen extends StatelessWidget {
       ProfileMenuItem(
         icon: Icons.logout,
         title: 'Выйти',
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const AuthorizationScreen()),
+          );
+        },
       ),
     ];
 

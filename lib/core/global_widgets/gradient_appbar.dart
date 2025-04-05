@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tns_voting_service_app/theme/theme.dart';
-import 'package:tns_voting_service_app/vote/presentation/widgets/vote_widget.dart';
 
 class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
