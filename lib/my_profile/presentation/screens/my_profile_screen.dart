@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
-import 'package:tns_voting_service_app/nav_bar/domain/state/navbar_model.dart';
-import 'package:tns_voting_service_app/nav_bar/domain/state/navbar_model_provider.dart';
+import 'package:tns_voting_service_app/history/presentation/screens/history_screen.dart';
 import 'package:tns_voting_service_app/theme/theme.dart';
 
 class ProfileMenuItem {
@@ -21,7 +20,6 @@ class MyProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final NavbarModel model = NavbarModelProvider.of(context)!.model;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
@@ -31,7 +29,10 @@ class MyProfileScreen extends StatelessWidget {
         icon: Icons.history,
         title: 'История голосований',
         onTap: () {
-          model.changeItem(3);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HistoryPage()),
+          );
         },
       ),
       ProfileMenuItem(

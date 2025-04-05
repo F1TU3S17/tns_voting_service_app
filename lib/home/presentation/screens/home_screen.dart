@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tns_voting_service_app/all_information/presentation/screens/info_screen.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
 import 'package:tns_voting_service_app/core/models/question_model.dart';
 import 'package:tns_voting_service_app/home/domain/model/home_screen_model.dart';
@@ -23,49 +24,59 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return HomeScreenModelProvider(
-      model: model, 
-      child: Builder(
-        builder: (context) {
-          final model = HomeScreenModelProvider.of(context)!.model;
-          final theme = Theme.of(context);
-          return Stack(
-            children:[
-              Scaffold(
-                appBar: GradientAppBar(
-                  gradient: AppTheme.defaultGradient,
-                  title: "Главная",
-                ),
-                body: RefreshIndicator(
-                  color: theme.primaryColor,
-                  onRefresh: () async {
-                    await model.initQuestions();
-                  },
-                  child: ListView.builder(
-                    itemCount: model.questions.length,
-                    itemBuilder: (context, index) {
-                      final List<QuestionShort> questions = model.questions;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
-                        child: SessionCard(
-                          title: questions[index].title,
-                          description: questions[index].description,
-                          sessionType: "Заочно",
-                          votesInfo: "Голоса: ${questions[index].votersCount}/${questions[index].votersTotal}", 
-                          date: questions[index].endDate,
+      model: model,
+      child: Builder(builder: (context) {
+        final model = HomeScreenModelProvider.of(context)!.model;
+        final theme = Theme.of(context);
+        return Stack(children: [
+          Scaffold(
+            appBar: GradientAppBar(
+              gradient: AppTheme.defaultGradient,
+              title: "Главная",
+            ),
+            body: RefreshIndicator(
+              color: theme.primaryColor,
+              onRefresh: () async {
+                await model.initQuestions();
+              },
+              child: ListView.builder(
+                itemCount: model.questions.length,
+                itemBuilder: (context, index) {
+                  final List<QuestionShort> questions = model.questions;
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InfoScreen(
+                            question: questions[index],
+                          ),
                         ),
                       );
                     },
-                  ),
-                ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 2.0, horizontal: 8.0),
+                      child: SessionCard(
+                        title: questions[index].title,
+                        description: questions[index].description,
+                        sessionType: "Заочно",
+                        votesInfo:
+                            "Голоса: ${questions[index].votersCount}/${questions[index].votersTotal}",
+                        date: questions[index].endDate,
+                      ),
+                    ),
+                  );
+                },
               ),
-              if (model.isLoadind) 
-                const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                ]
-            );
-        }
-      ),
+            ),
+          ),
+          if (model.isLoadind)
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+        ]);
+      }),
     );
   }
 }

@@ -31,7 +31,7 @@ class _HistoryPageState extends State<HistoryPage> {
           Scaffold(
             appBar: GradientAppBar(
               gradient: AppTheme.defaultGradient,
-              title: "Главная",
+              title: "История",
             ),
             body: RefreshIndicator(
               color: theme.primaryColor,
