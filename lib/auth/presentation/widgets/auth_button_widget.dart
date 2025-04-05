@@ -40,7 +40,12 @@ class AuthButtonWidget extends StatelessWidget {
             }
           }
         },
-        child: const Text('Войти'),
+        child: Text(
+          'Войти',
+          style: TextStyle(
+            color: colorScheme.onSurface,
+          ),
+        ),
       ),
     );
   }
