@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tns_voting_service_app/all_information_story/presentation/screens/info_story_screen.dart';
+import 'package:tns_voting_service_app/all_information/presentation/screens/info_screen.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
 import 'package:tns_voting_service_app/core/models/question_model.dart';
 import 'package:tns_voting_service_app/home/domain/model/home_screen_model.dart';
@@ -44,13 +44,16 @@ class _HomePageState extends State<HomePage> {
                     return Stack(
                       clipBehavior: Clip.antiAlias,
                       children: [
-                        SessionCard(
-                          title: questions[index].title,
-                          description: questions[index].description,
-                          sessionType: "Заочно",
-                          votesInfo:
-                              "Голоса: ${questions[index].votersCount}/${questions[index].votersTotal}",
-                          date: questions[index].endDate,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 4.0),
+                          child: SessionCard(
+                            title: questions[index].title,
+                            description: questions[index].description,
+                            sessionType: "Заочно",
+                            votesInfo:
+                                "Голоса: ${questions[index].votersCount}/${questions[index].votersTotal}",
+                            date: questions[index].endDate,
+                          ),
                         ),
                         Positioned.fill(
                           child: Material(
@@ -59,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => InfoStoryScreen(
+                                  builder: (context) => InfoScreen(
                                     question: questions[index],
                                   ),
                                 ),

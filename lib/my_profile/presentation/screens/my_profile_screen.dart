@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tns_voting_service_app/aftorization/presentation/screens/aftorization_screen.dart';
 import 'package:tns_voting_service_app/app/app_routes.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
-import 'package:tns_voting_service_app/history/presentation/screens/history_screen.dart';
 
 class ProfileMenuItem {
   final IconData icon;
@@ -27,10 +25,7 @@ class MyProfileScreen extends StatelessWidget {
         icon: Icons.history,
         title: 'История голосований',
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const HistoryPage()),
-          );
+          Navigator.pushNamed(context, AppRoutes.voteStory);
         },
       ),
       ProfileMenuItem(
@@ -44,11 +39,7 @@ class MyProfileScreen extends StatelessWidget {
         icon: Icons.logout,
         title: 'Выйти',
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const AuthorizationScreen()),
-          );
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.auth, (rou) => false);
         },
       ),
     ];

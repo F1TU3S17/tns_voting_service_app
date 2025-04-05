@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:tns_voting_service_app/aftorization/presentation/screens/aftorization_screen.dart';
+import 'package:tns_voting_service_app/all_information/presentation/screens/info_screen.dart';
+import 'package:tns_voting_service_app/app/app_routes.dart';
 import 'package:tns_voting_service_app/app/models/app_model.dart';
 import 'package:tns_voting_service_app/app/state/app_model_provider.dart';
 import 'package:tns_voting_service_app/core/utils/get_current_theme.dart';
+import 'package:tns_voting_service_app/history/presentation/screens/history_screen.dart';
 import 'package:tns_voting_service_app/my_profile/presentation/screens/settings_screeen.dart';
 import 'package:tns_voting_service_app/nav_bar/presentation/widgets/main_navigation.dart';
 
@@ -31,7 +35,10 @@ class AppCore extends StatelessWidget {
       theme: getCurrentTheme(appModel.isDarkTheme),
       home: const MainNavigation(),
       routes: ({
-        '/settings': (context) => const SettingsScreeen(),
+        AppRoutes.settings: (context) => const SettingsScreeen(),
+        AppRoutes.auth: (context) => const AuthorizationScreen(),
+        AppRoutes.voteStory: (context) => const HistoryPage(),
+        AppRoutes.main: (context) => const MainNavigation(),
       }),
     );
   }
