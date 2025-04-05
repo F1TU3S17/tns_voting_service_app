@@ -144,7 +144,7 @@ class _SessionMetadata extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.person_2_outlined, color: theme.colorScheme.secondary),
+              Icon(Icons.person_2_outlined),
               Expanded(
                 child: Text(
                   sessionType,
@@ -158,7 +158,7 @@ class _SessionMetadata extends StatelessWidget {
           ),
           Row(
             children: [
-              Icon(Icons.bolt, color: theme.colorScheme.secondary,),
+              Icon(Icons.bolt),
               Expanded(
                 child: Text(
                   votesInfo,

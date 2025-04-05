@@ -3,7 +3,6 @@ import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart'
 import 'package:tns_voting_service_app/core/models/question_model.dart';
 import 'package:tns_voting_service_app/home/domain/model/home_screen_model.dart';
 import 'package:tns_voting_service_app/home/domain/state/home_screen_model_provider/home_screen_model_provider.dart';
-import 'package:tns_voting_service_app/theme/theme.dart';
 import 'package:tns_voting_service_app/home/presentation/widgets/session_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,11 +31,10 @@ class _HomePageState extends State<HomePage> {
             children:[
               Scaffold(
                 appBar: GradientAppBar(
-                  gradient: AppTheme.defaultGradient,
                   title: "Главная",
                 ),
                 body: RefreshIndicator(
-                  color: theme.primaryColor,
+                  color: theme.iconTheme.color,
                   onRefresh: () async {
                     await model.initQuestions();
                   },

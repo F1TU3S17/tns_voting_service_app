@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tns_voting_service_app/app/app_routes.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
-import 'package:tns_voting_service_app/theme/theme.dart';
+
 
 class ProfileMenuItem {
   final IconData icon;
@@ -44,13 +44,12 @@ class MyProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: GradientAppBar(
-        gradient: AppTheme.defaultGradient,
         title: "Личный кабинет",
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildProfileHeader(context),
+            _buildProfileSection(context),
             _buildMenuSection(context, menuItems),
           ],
         ),
@@ -58,18 +57,18 @@ class MyProfileScreen extends StatelessWidget {
     );
   }
   
-  Widget _buildProfileHeader(BuildContext context) {
+  Widget _buildProfileSection(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Container(
-      width: double.infinity, // Растягиваем на всю доступную ширину
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16), // Используем такие же отступы как в _buildMenuSection
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: theme.shadowColor.withAlpha(26),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -80,10 +79,10 @@ class MyProfileScreen extends StatelessWidget {
           CircleAvatar(
             radius: 50,
             backgroundColor: theme.primaryColor,
-            child: const Icon(
+            child: Icon(
               Icons.person,
               size: 50,
-              color: Colors.white,
+              color: theme.colorScheme.onPrimary,
             ),
           ),
           const SizedBox(height: 16),
@@ -98,7 +97,7 @@ class MyProfileScreen extends StatelessWidget {
           Text(
             'ivaivaiva@tns.ru',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: Colors.black54,
+              color: theme.colorScheme.onSurface.withAlpha(153),
             ),
           ),
         ],
@@ -111,11 +110,11 @@ class MyProfileScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: theme.shadowColor.withAlpha(55),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -130,23 +129,21 @@ class MyProfileScreen extends StatelessWidget {
           thickness: 1,
           indent: 16,
           endIndent: 16,
-          color: Colors.grey.withOpacity(0.2),
+          color: theme.dividerColor.withAlpha(55),
         ),
         itemBuilder: (context, index) {
           final item = menuItems[index];
           return ListTile(
             leading: Icon(
               item.icon,
-              color: theme.primaryColor,
             ),
             title: Text(
               item.title,
               style: theme.textTheme.titleMedium,
             ),
-            trailing: const Icon(
+            trailing: Icon(
               Icons.arrow_forward_ios,
               size: 16,
-              color: Colors.grey,
             ),
             onTap: item.onTap,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

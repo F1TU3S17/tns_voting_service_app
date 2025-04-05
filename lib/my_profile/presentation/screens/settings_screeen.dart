@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tns_voting_service_app/app/state/app_model_provider.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
-import 'package:tns_voting_service_app/theme/theme.dart';
+import 'package:tns_voting_service_app/my_profile/presentation/components/small_switch_list_tile.dart';
 
 class SettingsScreeen extends StatefulWidget {
   const SettingsScreeen({super.key});
@@ -22,26 +22,25 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
     final darkModeEnabled = appModel.isDarkTheme;
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: GradientAppBar(gradient: AppTheme.defaultGradient, title: "Настройки"),
+      appBar: GradientAppBar(title: "Настройки"),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
           _buildSectionHeader(theme, "Основные"),
           _buildSettingsCard(
             children: [
-              SwitchListTile(
+              SmallSwitchListTile(
                 title: Text("Тёмная тема", style: theme.textTheme.bodyMedium),
                 subtitle: Text("Включить тёмный режим приложения", style: theme.textTheme.bodySmall),
-                secondary: Icon(Icons.dark_mode, color: theme.primaryColor),
+                secondary: Icon(Icons.dark_mode),
                 value: darkModeEnabled,
                 onChanged: (value) async{
                     appModel.setAppTheme(value);
-        
                 },
               ),
               const Divider(),
               ListTile(
-                leading: Icon(Icons.language, color: theme.primaryColor),
+                leading: Icon(Icons.language),
                 title: Text("Язык", style: theme.textTheme.bodyMedium),
                 subtitle: Text("Выберите язык интерфейса", style: theme.textTheme.bodySmall),
                 trailing: DropdownButton<String>(
@@ -69,10 +68,10 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
           _buildSectionHeader(theme, "Уведомления"),
           _buildSettingsCard(
             children: [
-              SwitchListTile(
+              SmallSwitchListTile(
                 title: Text("Уведомления", style: theme.textTheme.bodyMedium),
                 subtitle: Text("Получать уведомления о новых голосованиях", style: theme.textTheme.bodySmall),
-                secondary: Icon(Icons.notifications, color: theme.primaryColor),
+                secondary: Icon(Icons.notifications),
                 value: notificationsEnabled,
                 onChanged: (value) {
                   setState(() {
@@ -85,7 +84,7 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
                 CheckboxListTile(
                   title: Text("Новые голосования", style: theme.textTheme.bodyMedium),
                   subtitle: Text("Уведомлять при появлении новых голосований", style: theme.textTheme.bodySmall),
-                  secondary: Icon(Icons.how_to_vote, color: theme.primaryColor),
+                  secondary: Icon(Icons.how_to_vote),
                   value: true,
                   onChanged: (value) {},
                 ),
@@ -93,7 +92,7 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
                 CheckboxListTile(
                   title: Text("Результаты голосований", style: theme.textTheme.bodyMedium),
                   subtitle: Text("Уведомлять о публикации результатов", style: theme.textTheme.bodySmall),
-                  secondary: Icon(Icons.insert_chart, color: theme.primaryColor),
+                  secondary: Icon(Icons.insert_chart),
                   value: false,
                   onChanged: (value) {},
                 ),
@@ -105,10 +104,10 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
           _buildSectionHeader(theme, "Безопасность"),
           _buildSettingsCard(
             children: [
-              SwitchListTile(
+              SmallSwitchListTile(
                 title: Text("Биометрическая аутентификация", style: theme.textTheme.bodyMedium),
                 subtitle: Text("Использовать отпечаток пальца или Face ID для входа", style: theme.textTheme.bodySmall),
-                secondary: Icon(Icons.fingerprint, color: theme.primaryColor),
+                secondary: Icon(Icons.fingerprint),
                 value: biometricEnabled,
                 onChanged: (value) {
                   setState(() {
@@ -116,14 +115,6 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
                   });
                 },
               ),
-              // const Divider(),
-              // ListTile(
-              //   leading: Icon(Icons.lock_reset, color: theme.primaryColor),
-              //   title: Text("Сменить пароль", style: theme.textTheme.bodyMedium),
-              //   subtitle: Text("Изменить пароль для входа в приложение", style: theme.textTheme.bodySmall),
-              //   trailing: Icon(Icons.arrow_forward_ios, size: 16),
-              //   onTap: () {},
-              // ),
             ],
           ),
           
@@ -132,20 +123,20 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
           _buildSettingsCard(
             children: [
               ListTile(
-                leading: Icon(Icons.info_outline, color: theme.primaryColor),
+                leading: Icon(Icons.info_outline),
                 title: Text("Версия приложения", style: theme.textTheme.bodyMedium),
                 subtitle: Text("1.0.0", style: theme.textTheme.bodySmall),
               ),
               const Divider(),
               ListTile(
-                leading: Icon(Icons.policy, color: theme.primaryColor),
+                leading: Icon(Icons.policy),
                 title: Text("Политика конфиденциальности", style: theme.textTheme.bodyMedium),
                 trailing: Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {},
               ),
               const Divider(),
               ListTile(
-                leading: Icon(Icons.help_outline, color: theme.primaryColor),
+                leading: Icon(Icons.help_outline),
                 title: Text("Помощь", style: theme.textTheme.bodyMedium),
                 trailing: Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {},
@@ -161,11 +152,10 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
   
   Widget _buildSectionHeader(ThemeData theme, String title) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16, bottom: 8),
+      padding: const EdgeInsets.only(left: 4, bottom: 8),
       child: Text(
         title,
         style: theme.textTheme.titleMedium?.copyWith(
-          color: theme.primaryColor,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -173,18 +163,22 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
   }
   
   Widget _buildSettingsCard({required List<Widget> children}) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
+    final theme = Theme.of(context);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 24),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: theme.shadowColor.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Column(
-          children: children,
-        ),
-      ),
+      child: Column(children: children),
     );
   }
 }
+
