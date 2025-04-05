@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class DepartmentCard extends StatelessWidget {
   final String name;
   final int voteCount;
+  final String imageUrl;
 
   const DepartmentCard({
     super.key,
     required this.name,
     required this.voteCount,
+    required this.imageUrl,
   });
 
   @override
@@ -30,24 +32,19 @@ class DepartmentCard extends StatelessWidget {
             onTap: () {}, // обработка тапа если надо
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
               child: Row(
                 children: [
                   // Заглушка под картинку
                   Container(
                     width: 40,
                     height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
                     alignment: Alignment.center,
-                    child:
-                        const Icon(Icons.image, size: 20, color: Colors.grey),
+                    child: Image.asset(
+                      imageUrl,
+                    ),
                   ),
-
                   const SizedBox(width: 16),
-
                   // Основной текст
                   Expanded(
                     child: Column(
@@ -61,9 +58,7 @@ class DepartmentCard extends StatelessWidget {
                         Text(
                           "Заседания: $voteCount",
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.brightness == Brightness.dark
-                                ? const Color(0x99FFFFFF)
-                                : const Color(0x99000000),
+                            color: theme.colorScheme.onSurface.withAlpha(150),
                           ),
                         ),
                       ],
