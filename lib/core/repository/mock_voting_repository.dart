@@ -124,7 +124,12 @@ class MockVotingRepository implements VotingRepository {
   Future<String> downloadFile(String fileId, String fileName) async {
     try {
       // Получаем безопасное имя файла
-      final safeName = fileName.replaceAll(RegExp(r'[^\w\s\.\-]'), '_');
+      var safeName = fileName.replaceAll(RegExp(r'[^\w\s\.\-]'), '_');
+      
+      // Проверяем расширение файла и добавляем .pdf если нет
+      if (!safeName.toLowerCase().endsWith('.pdf')) {
+        safeName = '$safeName.pdf';
+      }
 
       Directory directory;
 
