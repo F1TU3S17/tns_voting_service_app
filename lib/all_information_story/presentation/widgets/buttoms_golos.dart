@@ -16,7 +16,7 @@ Widget buildVoteButton({
           borderRadius: BorderRadius.circular(6),
         ),
         backgroundColor:
-            isSelected ? color.withOpacity(0.2) : Colors.transparent,
+            isSelected ? color.withValues(alpha: 0.2) : Colors.transparent,
       ),
       onPressed: onTap,
       child: Row(

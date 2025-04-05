@@ -11,7 +11,7 @@ class AuthButtonWidget extends StatelessWidget {
   });
 
   final ColorScheme colorScheme;
-  late Future<String> token;
+  late String token;
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +27,11 @@ class AuthButtonWidget extends StatelessWidget {
           ),
           padding: const EdgeInsets.symmetric(vertical: 16),
         ),
-        onPressed: () {
+        onPressed: () async {
           if (model!.validate()) {
             try {
-              token = model.auth();
-              Navigator.popAndPushNamed(context, AppRoutes.home);
+              token = await model.auth();
+              Navigator.popAndPushNamed(context, AppRoutes.main);
             }
             // что-то придумать
             catch (ex) {
