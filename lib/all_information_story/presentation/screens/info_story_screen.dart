@@ -40,7 +40,6 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
 
     return Scaffold(
       appBar: GradientAppBar(
-        gradient: AppTheme.defaultGradient,
         title: widget.question.title,
       ),
       body: SingleChildScrollView(

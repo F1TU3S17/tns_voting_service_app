@@ -12,7 +12,6 @@ class AuthorizationScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: GradientAppBar(
-        gradient: AppTheme.defaultGradient,
         title: "Авторизация",
       ),
       body: Padding(
