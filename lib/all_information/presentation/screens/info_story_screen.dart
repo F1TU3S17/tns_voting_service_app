@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:tns_voting_service_app/all_information/domain/state/info_screen_state.dart';
 import 'package:tns_voting_service_app/all_information/presentation/widgets/build_table_colomn.dart';
 import 'package:tns_voting_service_app/all_information/presentation/widgets/build_table_header.dart';
@@ -26,51 +24,18 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
   List<String> supporters = [
     'Иванов И.',
     'Петров П.',
-    'Сидоров С.',
-    'Иванов И.',
-    'Петров П.',
-    'Сидоров С.',
-    'Иванов И.',
-    'Петров П.',
-    'Сидоров С.',
-    'Иванов И.',
-    'Петров П.',
-    'Сидоров С.'
   ];
   List<String> abstained = ['Смирнов С.', 'Кузнецов К.'];
   List<String> opposed = ['Васильев В.', 'Николаев Н.', 'Фёдоров Ф.'];
-
-  Future<void> _openPdf(String assetPath) async {
-    try {
-      final byteData = await rootBundle.load(assetPath);
-      final tempDir = await getTemporaryDirectory();
-      final tempFile = File('${tempDir.path}/${assetPath.split('/').last}');
-      await tempFile.writeAsBytes(byteData.buffer.asUint8List());
-
-      if (await canLaunchUrl(Uri.file(tempFile.path))) {
-        await launchUrl(Uri.file(tempFile.path));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Не удалось открыть файл')),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка при открытии файла: $e')),
-      );
-    }
-  }
-
   bool isFirstBuild = true;
 
   // Метод для открытия ссылки в браузере
- // Метод для открытия ссылки в браузере
+  // Метод для открытия ссылки в браузере
   Future<void> _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)){
+    if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
-    } 
-    else {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Не удалось открыть ссылку')),
       );
@@ -84,9 +49,13 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
     final textTheme = theme.textTheme;
     final model = InfoScreenModelProvider.of(context)!.model;
 
+    int? allLenght = (supporters.length + abstained.length + opposed.length);
+
     // Определение цветов в зависимости от темы
-    final backgroundColor = isDark ? AppTheme.darkCardColor : theme.colorScheme.surface;
-    final borderColor = isDark ? theme.colorScheme.primaryContainer : theme.colorScheme.primary;
+    final backgroundColor =
+        isDark ? AppTheme.darkCardColor : theme.colorScheme.surface;
+    final borderColor =
+        isDark ? theme.colorScheme.primaryContainer : theme.colorScheme.primary;
     final cardColor = isDark ? AppTheme.darkCardColor : Colors.white;
     final textColor = isDark ? AppTheme.darkTextColor : Colors.black87;
     final dividerColor = isDark ? Colors.grey.shade800 : Colors.grey.shade300;
@@ -118,7 +87,8 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
             ),
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(left: 8, top: 20, right: 8, bottom: 16),
+                padding: const EdgeInsets.only(
+                    left: 8, top: 20, right: 8, bottom: 16),
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   alignment: Alignment.topCenter,
@@ -152,27 +122,30 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                           votersTotal: model.questionDetail?.votersTotal,
                           description: model.questionDetail?.description ?? '',
                         ),
-                        
+
                         // Ссылка на конференцию, если она есть
-                        if (model.questionDetail?.conferenceLink != null && 
-                            model.questionDetail!.conferenceLink.isNotEmpty) ...[
+                        if (model.questionDetail?.conferenceLink != null &&
+                            model
+                                .questionDetail!.conferenceLink.isNotEmpty) ...[
                           const SizedBox(height: 12),
                           InkWell(
-                            onTap: () => _launchURL(model.questionDetail!.conferenceLink),
+                            onTap: () => _launchURL(
+                                model.questionDetail!.conferenceLink),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Icon(
                                   Icons.videocam,
-                                  color: isDark 
-                                      ? AppTheme.darkAccentColor 
+                                  color: isDark
+                                      ? AppTheme.darkAccentColor
                                       : theme.colorScheme.secondary,
                                   size: 20,
                                 ),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Ссылка на конференцию:',
@@ -197,11 +170,11 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                             ),
                           ),
                         ],
-                        
+
                         const SizedBox(height: 16),
                         Divider(color: dividerColor, thickness: 1),
                         const SizedBox(height: 12),
-                        
+
                         // Секция с прикрепленными файлами
                         if (model.questionDetail!.files.isNotEmpty) ...[
                           Text(
@@ -269,7 +242,7 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                           Divider(color: dividerColor, thickness: 1),
                           const SizedBox(height: 12),
                         ],
-                        
+
                         // Заголовок для секции голосования
                         Text(
                           'Ваш голос:',
@@ -279,12 +252,16 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
+
                         // Кнопки голосования и график
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            buildColoredPercentageText(),
+                            if (allLenght != 0)
+                              buildColoredPercentageText(
+                                  supporters.length / allLenght,
+                                  abstained.length / allLenght,
+                                  opposed.length / allLenght),
                             Expanded(
                               child: Column(
                                 children: [
@@ -293,10 +270,7 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                                     label: 'Поддержать',
                                     color: Colors.green,
                                     isSelected: selectedOption == 'Поддержать',
-                                    onTap: () => setState(() {
-                                      selectedOption = 'Поддержать';
-                                      model.saveVoteOption(0);
-                                    }),
+                                    onTap: () => setState(() {}),
                                   ),
                                   const SizedBox(height: 8),
                                   buildVoteButton(
@@ -305,10 +279,7 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                                     color: Colors.orange,
                                     isSelected:
                                         selectedOption == 'Воздержаться',
-                                    onTap: () => setState(() {
-                                      selectedOption = 'Воздержаться';
-                                      model.saveVoteOption(1);
-                                    }),
+                                    onTap: () => setState(() {}),
                                   ),
                                   const SizedBox(height: 8),
                                   buildVoteButton(
@@ -316,21 +287,18 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                                     label: 'Против',
                                     color: Colors.red,
                                     isSelected: selectedOption == 'Против',
-                                    onTap: () => setState(() {
-                                      selectedOption = 'Против';
-                                      model.saveVoteOption(2);
-                                    }),
+                                    onTap: () => setState(() {}),
                                   ),
                                 ],
                               ),
                             ),
                           ],
                         ),
-                        
+
                         const SizedBox(height: 16),
                         Divider(color: dividerColor, thickness: 1),
                         const SizedBox(height: 12),
-                        
+
                         // Заголовок для таблицы результатов
                         Text(
                           'Результаты голосования:',
@@ -340,7 +308,7 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        
+
                         // Таблица с результатами голосования
                         Container(
                           decoration: BoxDecoration(

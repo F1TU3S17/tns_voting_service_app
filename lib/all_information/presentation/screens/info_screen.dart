@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:tns_voting_service_app/all_information/domain/state/info_screen_state.dart';
 import 'package:tns_voting_service_app/all_information/presentation/widgets/buttoms_golos.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
@@ -59,27 +57,7 @@ class _InfoScreenState extends State<InfoScreen> {
     final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
     final dividerColor = isDark ? Colors.white24 : Colors.grey.shade300;
 
-    Future<void> _openPdf(String assetPath) async {
-      try {
-        final byteData = await rootBundle.load(assetPath);
-        final tempDir = await getTemporaryDirectory();
-        final tempFile = File('${tempDir.path}/${assetPath.split('/').last}');
-        await tempFile.writeAsBytes(byteData.buffer.asUint8List());
-
-        if (await canLaunchUrl(Uri.file(tempFile.path))) {
-          await launchUrl(Uri.file(tempFile.path));
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Не удалось открыть файл')),
-          );
-        }
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка при открытии файла: $e')),
-        );
-      }
-    }
-
+  
     if (isFirstBuild) {
       model.initQuestionDetail(widget.questionId);
       isFirstBuild = false;

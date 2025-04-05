@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:tns_voting_service_app/core/models/department_model.dart';
 
 import '../models/login_model.dart';
