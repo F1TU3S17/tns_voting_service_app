@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
 import 'package:tns_voting_service_app/core/models/question_model.dart';
 import 'package:tns_voting_service_app/core/utils/parse_date.dart';
-import 'package:tns_voting_service_app/theme/theme.dart';
 import 'package:tns_voting_service_app/all_information_story/presentation/widgets/buttoms_golos.dart';
 
 class InfoScreen extends StatefulWidget {
@@ -41,7 +40,7 @@ class _InfoScreenState extends State<InfoScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
