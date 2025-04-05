@@ -31,9 +31,7 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: !appModel.isDarkTheme
-              ? Image.asset("assets/logoTNS.png")
-              : Image.asset("assets/logoTNS2.png"),
+          child: Image.asset("assets/App_logo.png"),
         )
       ],
       automaticallyImplyLeading: automaticallyImplyLeading,
