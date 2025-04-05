@@ -12,7 +12,7 @@ class CurrentAppScreenWidget extends StatelessWidget {
     final NavbarModel model = NavbarModelProvider.of(context)!.model;
     return Scaffold(
       bottomNavigationBar: NavigationBar(
-        height: 60,
+        height: 70,
         destinations: [
           NavigationDestination(icon: Icon(Icons.how_to_vote_outlined), label: 'Главная'),
           NavigationDestination(icon: Icon(Icons.person_outline), label: 'Профиль'),

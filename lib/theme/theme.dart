@@ -11,39 +11,18 @@ abstract class AppTheme {
   );
   // Цвета для темной темы
   static const Color darkPrimaryColor = Color(0xFF1F1F1F);
-  static const Color darkSecondaryColor = Color(0xFF2D2D2D);
-  static const Color darkAccentColor = Color(0xFF6A42F4);
+  static const Color darkSecondaryColor = Color(0xFF6FFF29);
+  static const Color darkAccentColor = Color(0xff6fff29);
   static const Color darkBackgroundColor = Color(0xFF121212);
   static const Color darkCardColor = Color(0xFF252525);
   static const Color darkTextColor = Color(0xFFF5F5F5);
   static const Color darkSubtitleColor = Color(0xFFB0B0B0);
 
-  // Градиенты для темной темы
-  static const LinearGradient primaryGradient = LinearGradient(
-    colors: [Color(0xFF000000), Color(0xFF1A1A40)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const LinearGradient secondaryGradient = LinearGradient(
-    colors: [Color(0xFF000000), Color(0xFF1A1A40)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const LinearGradient accentGradient = LinearGradient(
-    colors: [Color(0xFF000000), Color(0xFF1A1A40)],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
 
   static final LinearGradient gradientDark = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
-    colors: [
-      Color(0xFF000000),
-      Color(0xFF1A1A40),
-    ],
+    colors: [Color(0x66000000), Color(0x661A1A40)],
   );
 
   static ThemeData ligthTheme = ThemeData(
@@ -129,6 +108,7 @@ abstract class AppTheme {
         ),
         labelLarge: TextStyle(
           fontSize: 16,
+          color: Color(0xFF00E457),
         ),
       ));
 
@@ -153,7 +133,7 @@ abstract class AppTheme {
       ),
     ),
     iconTheme: IconThemeData(
-      color: darkAccentColor.withAlpha(120)
+      color: darkAccentColor,
     ),
     switchTheme: SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
@@ -191,7 +171,7 @@ abstract class AppTheme {
       bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: darkTextColor),
       bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: darkTextColor),
       bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: darkSubtitleColor),
-      labelLarge: TextStyle(fontSize: 16, color: darkTextColor),
+      labelLarge: TextStyle(fontSize: 16, color: darkAccentColor),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -203,7 +183,10 @@ abstract class AppTheme {
       ),
     ),
     navigationBarTheme: NavigationBarThemeData(
-      indicatorColor: darkAccentColor.withAlpha(55),
+      indicatorColor: darkAccentColor,
+      backgroundColor: darkPrimaryColor.withAlpha(25),
+      elevation: 0,
+      labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
     ),
     progressIndicatorTheme: const ProgressIndicatorThemeData(
       color: darkAccentColor,
