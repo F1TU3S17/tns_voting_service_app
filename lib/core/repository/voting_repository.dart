@@ -13,7 +13,7 @@ abstract class VotingRepository {
   Future<QuestionDetail> getQuestionDetails(String questionId);
   
   /// Скачивание файла
-  Future<File> downloadFile(String fileId, String savePath);
+  Future<String> downloadFile(String fileId, String fileName);
   
   /// Голосование
   Future<void> vote(String questionId, int answerId);

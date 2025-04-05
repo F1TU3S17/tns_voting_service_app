@@ -1,4 +1,3 @@
-import 'dart:io';
 import '../client/api/voting_client.dart';
 import '../models/login_model.dart';
 import '../models/question_model.dart';
@@ -25,8 +24,8 @@ class VotingRepositoryImpl implements VotingRepository {
   }
 
   @override
-  Future<File> downloadFile(String fileId, String savePath) async {
-    return await _client.downloadFile(fileId, savePath);
+  Future<String> downloadFile(String fileId, String fileName) async {
+    return await _client.downloadFile(fileId, fileName);
   }
 
   @override

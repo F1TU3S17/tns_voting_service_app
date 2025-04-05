@@ -16,6 +16,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   path_provider: ^2.0.11
   url_launcher: ^6.1.11
+  open_file: ^3.5.10
+  permission_handler: ^11.4.0
+  device_info_plus: ^9.1.2
 
 dev_dependencies:
   flutter_test:

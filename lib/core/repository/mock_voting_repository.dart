@@ -1,7 +1,11 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 import '../models/login_model.dart';
 import '../models/question_model.dart';
 import 'voting_repository.dart';
@@ -59,7 +63,7 @@ class MockVotingRepository implements VotingRepository {
 
     // Создаем историю завершенных голосований
     for (int i = 1; i <= 3; i++) {
-      final String id = 'hist${i+3}';
+      final String id = 'hist${i + 3}';
       final List<FileInfo> files = [];
       final String fileId = '${id}_protocol';
       final String fileName = 'Протокол голосования #$i.pdf';
@@ -117,31 +121,81 @@ class MockVotingRepository implements VotingRepository {
   }
 
   @override
-  Future<File> downloadFile(String fileId, String savePath) async {
-    final Map<String, dynamic> attachedFiles = {
-      "1": {'name': 'Test1.pdf', 'path': 'assets/pdf/Test1.pdf'},
-      "2": {'name': 'ИНП.pdf', 'path': 'assets/pdf/INP.pdf'},
-      "3": {'name': 'Test1_2.pdf', 'path': 'assets/pdf/Test1_2.pdf'},
-      "4": {'name': 'Логотип ТНС', 'path': 'assets/logoTNS.png'},
-      "5": {'name': 'Логотип ТНС 2', 'path': 'assets/logoTNS2.png'},
-      "6": {'name': 'Госуслуги', 'path': 'assets/gosusl.png'},
-    };
+  Future<String> downloadFile(String fileId, String fileName) async {
+    try {
+      // Получаем безопасное имя файла
+      final safeName = fileName.replaceAll(RegExp(r'[^\w\s\.\-]'), '_');
 
-    Map<String, String> fileInfo = attachedFiles[fileId];
+      Directory directory;
 
-    await Future.delayed(Duration(seconds: 1));
-    if (_token == null) {
-      throw Exception('Токен недействителен');
+      if (Platform.isAndroid) {
+        // Android-специфичный код
+        // Получаем информацию о версии Android
+        final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        final int sdkInt = androidInfo.version.sdkInt;
+
+        if (sdkInt >= 30) {
+          // Android 11+
+          // Для Android 11+ используем директорию приложения
+          directory = await getApplicationDocumentsDirectory();
+        } else if (sdkInt >= 29) {
+          // Android 10
+          directory = await getApplicationDocumentsDirectory();
+        } else {
+          // Android 9 и ниже
+          var status = await Permission.storage.status;
+          if (!status.isGranted) {
+            status = await Permission.storage.request();
+            if (!status.isGranted) {
+              throw Exception('Нет разрешения на запись в хранилище');
+            }
+          }
+          directory = await getApplicationDocumentsDirectory();
+        }
+      } else if (Platform.isIOS) {
+        // iOS-специфичный код
+        // На iOS используем стандартную директорию документов приложения
+        directory = await getApplicationDocumentsDirectory();
+      } else {
+        // Для других платформ
+        directory = await getApplicationDocumentsDirectory();
+      }
+
+      // Создаем директорию "Files"
+      final filesDir = Directory('${directory.path}/Files');
+      if (!await filesDir.exists()) {
+        await filesDir.create(recursive: true);
+      }
+
+      // Формируем полный путь к файлу
+      final filePath = path.join(filesDir.path, safeName);
+      final file = File(filePath);
+
+      // Проверяем, существует ли файл уже
+      if (await file.exists()) {
+        debugPrint('Файл уже существует: $filePath');
+        return filePath;
+      }
+
+      final url =
+          "https://raa.ru/wp-content/uploads/2018/08/%D0%97%D0%B0%D0%BA%D0%BE%D0%BD-%D0%BA%D0%B0%D0%BA-%D0%BE%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%BE%D0%B9-%D0%B8%D1%81%D1%82%D0%BE%D1%87%D0%BD%D0%B8%D0%BA-%D1%80%D0%BE%D1%81%D1%81%D0%B8%D0%B9%D1%81%D0%BA%D0%BE%D0%B3%D0%BE-%D0%BF%D1%80%D0%B0%D0%B2%D0%B0.pdf";
+
+      // Скачиваем файл
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        // Сохраняем файл
+        await file.writeAsBytes(response.bodyBytes);
+        debugPrint('Файл успешно сохранен: $filePath');
+        return filePath;
+      } else {
+        throw Exception('Ошибка HTTP: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Ошибка при скачивании файла: $e');
+      throw Exception('Ошибка загрузки: $e');
     }
-
-    final fileContent = _files[fileId];
-    if (fileContent == null) {
-      throw Exception('Файл не найден');
-    }
-
-    final file = File(savePath);
-    await file.writeAsString(fileContent);
-    return file;
   }
 
   @override
