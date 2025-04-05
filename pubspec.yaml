@@ -25,3 +25,6 @@ flutter:
   assets: 
     - assets/logoTNS.png
     - assets/gosusl.png
+    - assets/pdf/Test-1_2_3.pdf
+    - assets/pdf/INP.pdf
+    - assets/pdf/Test1.pdf
