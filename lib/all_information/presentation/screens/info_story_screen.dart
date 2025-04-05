@@ -63,6 +63,20 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
 
   bool isFirstBuild = true;
 
+  // Метод для открытия ссылки в браузере
+ // Метод для открытия ссылки в браузере
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)){
+      await launchUrl(uri);
+    } 
+    else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Не удалось открыть ссылку')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -138,6 +152,51 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                           votersTotal: model.questionDetail?.votersTotal,
                           description: model.questionDetail?.description ?? '',
                         ),
+                        
+                        // Ссылка на конференцию, если она есть
+                        if (model.questionDetail?.conferenceLink != null && 
+                            model.questionDetail!.conferenceLink.isNotEmpty) ...[
+                          const SizedBox(height: 12),
+                          InkWell(
+                            onTap: () => _launchURL(model.questionDetail!.conferenceLink),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.videocam,
+                                  color: isDark 
+                                      ? AppTheme.darkAccentColor 
+                                      : theme.colorScheme.secondary,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Ссылка на конференцию:',
+                                        style: textTheme.bodyMedium?.copyWith(
+                                          color: textColor,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        model.questionDetail!.conferenceLink,
+                                        style: textTheme.bodyMedium?.copyWith(
+                                          color: isDark
+                                              ? AppTheme.darkAccentColor
+                                              : theme.colorScheme.onSurface,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                         
                         const SizedBox(height: 16),
                         Divider(color: dividerColor, thickness: 1),

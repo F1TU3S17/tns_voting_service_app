@@ -45,5 +45,15 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	
+	<!-- Добавленные разрешения для открытия URL в iOS -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>http</string>
+		<string>tel</string>
+		<string>mailto</string>
+		<string>zoom</string>
+	</array>
 </dict>
 </plist>
