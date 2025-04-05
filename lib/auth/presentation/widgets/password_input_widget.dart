@@ -25,7 +25,8 @@ class PasswordInputWidget extends StatelessWidget {
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: 'Пароль',
-          hintStyle: TextStyle(color: colorScheme.onSurface),
+          hintStyle:
+              TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.6)),
           errorText:
               model.passwordError.isNotEmpty ? model.passwordError : null,
           errorStyle: TextStyle(color: colorScheme.error),

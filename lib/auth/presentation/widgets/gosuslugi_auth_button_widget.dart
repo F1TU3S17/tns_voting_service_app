@@ -11,10 +11,10 @@ class GosuslugiAuthButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
-          side: BorderSide(color: colorScheme.primary),
+          overlayColor: colorScheme.onSurface,
+          side: BorderSide(color: colorScheme.onSurface),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -24,9 +24,14 @@ class GosuslugiAuthButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/gosusl.png', width: 24, height: 24),
+            Image.asset('assets/gosusl.png', width: 40, height: 40),
             const SizedBox(width: 8),
-            const Text('Войти через Госуслуги'),
+            Text(
+              'Войти через Госуслуги',
+              style: TextStyle(
+                color: colorScheme.onSurface,
+              ),
+            ),
           ],
         ),
       ),
