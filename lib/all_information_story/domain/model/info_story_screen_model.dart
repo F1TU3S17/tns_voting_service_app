@@ -6,22 +6,20 @@ import 'package:tns_voting_service_app/core/repository/voting_repository.dart';
 class InfoStoryScreenModel extends ChangeNotifier {
   /// Репозиторий для работы с данными голосования.
   final VotingRepository repository = RepositoryProvider.getRepository();
-
-  /// Список вопросов для отображения на домашней странице.
-  List<QuestionShort> questions = [];
+  QuestionDetail? questionDetail;
 
   /// Индикатор состояния загрузки данных.
   ///
   /// `true` - если данные загружаются, `false` - если загрузка завершена.
-  bool isLoadind = true;
+  bool isLoading = true;
 
   /// Инициализирует список вопросов из репозитория.
   /// Устанавливает флаг загрузки в начале и конце операции.
   /// Уведомляет слушателей об обновлении данных.
-  Future<void> initQuestions() async {
-    isLoadind = true;
-    questions = await repository.getQuestions();
+  Future<void> initQuestionDetail(String questionId) async {
+    isLoading = true;
+    questionDetail = (await repository.getQuestionDetails(questionId));
     notifyListeners();
-    isLoadind = false;
+    isLoading = false;
   }
 }

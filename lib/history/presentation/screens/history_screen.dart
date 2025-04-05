@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:tns_voting_service_app/all_information_story/domain/model/info_story_screen_model.dart';
+import 'package:tns_voting_service_app/all_information_story/domain/state/info_story_screen_state.dart';
 import 'package:tns_voting_service_app/all_information_story/presentation/screens/info_story_screen.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
 import 'package:tns_voting_service_app/core/models/question_model.dart';
 import 'package:tns_voting_service_app/history/domain/model/history_screen_state.dart';
 import 'package:tns_voting_service_app/history/domain/state/history_screen_model.dart';
-import 'package:tns_voting_service_app/theme/theme.dart';
 import 'package:tns_voting_service_app/history/presentation/widgets/session_cards.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -46,11 +47,15 @@ class _HistoryPageState extends State<HistoryPage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => InfoStoryScreen(
-                            question: questions[index],
-                          ),
-                        ),
+                        MaterialPageRoute(builder: (context) {
+                          final storyModel = InfoStoryScreenModel();
+                          return InfoStoryScreenModelProvider(
+                            model: storyModel,
+                            child: InfoStoryScreen(
+                              questionId: model.questions[index].id,
+                            ),
+                          );
+                        }),
                       );
                     },
                     child: Padding(

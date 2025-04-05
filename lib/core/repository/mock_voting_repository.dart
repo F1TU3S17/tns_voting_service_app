@@ -32,7 +32,7 @@ class MockVotingRepository implements VotingRepository {
         endDate: DateTime.now().add(Duration(days: _random.nextInt(14) + 1)),
       );
       _questions.add(questionShort);
-      
+
       // Создаем детальную информацию для каждого вопроса
       final List<FileInfo> files = [];
       for (int j = 1; j <= _random.nextInt(3) + 1; j++) {
@@ -41,7 +41,7 @@ class MockVotingRepository implements VotingRepository {
         files.add(FileInfo(id: fileId, name: fileName));
         _files[fileId] = 'Содержимое файла $j для вопроса #$i';
       }
-      
+
       _questionDetails[id] = QuestionDetail(
         id: id,
         title: questionShort.title,
@@ -51,7 +51,8 @@ class MockVotingRepository implements VotingRepository {
         votersTotal: questionShort.votersTotal,
         options: ['За', 'Против', 'Воздержаться'],
         votingType: _random.nextBool() ? VotingType.com : VotingType.bod,
-        votingWay: _random.nextBool() ? VotingWay.majority : VotingWay.unanimous,
+        votingWay:
+            _random.nextBool() ? VotingWay.majority : VotingWay.unanimous,
         conferenceLink: 'https://zoom.us/j/123456789',
       );
     }
@@ -65,7 +66,7 @@ class MockVotingRepository implements VotingRepository {
       files.add(FileInfo(id: fileId, name: fileName));
       _files[fileId] = 'Содержимое протокола голосования #$i';
       final int votersTotal = _random.nextInt(10) + 10;
-      
+
       _votingHistory.add(QuestionDetail(
         id: id,
         title: 'Завершенное голосование #$i',
@@ -75,7 +76,8 @@ class MockVotingRepository implements VotingRepository {
         votersTotal: votersTotal,
         options: ['За', 'Против', 'Воздержаться'],
         votingType: _random.nextBool() ? VotingType.com : VotingType.bod,
-        votingWay: _random.nextBool() ? VotingWay.majority : VotingWay.unanimous,
+        votingWay:
+            _random.nextBool() ? VotingWay.majority : VotingWay.unanimous,
         conferenceLink: 'https://zoom.us/j/123456789',
       ));
     }
@@ -116,22 +118,27 @@ class MockVotingRepository implements VotingRepository {
 
   @override
   Future<File> downloadFile(String fileId, String savePath) async {
+    final Map<String, dynamic> attachedFiles = {
+      "1": {'name': 'Test1.pdf', 'path': 'assets/pdf/Test1.pdf'},
+      "2": {'name': 'ИНП.pdf', 'path': 'assets/pdf/INP.pdf'},
+      "3": {'name': 'Test1_2.pdf', 'path': 'assets/pdf/Test1_2.pdf'},
+      "4": {'name': 'Логотип ТНС', 'path': 'assets/logoTNS.png'},
+      "5": {'name': 'Логотип ТНС 2', 'path': 'assets/logoTNS2.png'},
+      "6": {'name': 'Госуслуги', 'path': 'assets/gosusl.png'},
+    };
+
+    Map<String, String> fileInfo = attachedFiles[fileId];
+
     await Future.delayed(Duration(seconds: 1));
     if (_token == null) {
       throw Exception('Токен недействителен');
     }
-    
+
     final fileContent = _files[fileId];
     if (fileContent == null) {
       throw Exception('Файл не найден');
     }
-    
-    // Если savePath не задан явно, создаем временный файл
-    if (savePath.isEmpty) {
-      //final directory = await getTemporaryDirectory();
-      //savePath = '${directory.path}/mock_file_$fileId.pdf';
-    }
-    
+
     final file = File(savePath);
     await file.writeAsString(fileContent);
     return file;
@@ -143,15 +150,15 @@ class MockVotingRepository implements VotingRepository {
     if (_token == null) {
       throw Exception('Токен недействителен');
     }
-    
+
     if (!_questionDetails.containsKey(questionId)) {
       throw Exception('Неверные данные запроса');
     }
-    
+
     if (answerId < 0 || answerId > 2) {
       throw Exception('Неверные данные запроса: недопустимый answerId');
     }
-    
+
     // Имитация успешного голосования
     debugPrint('Голос принят: вопрос $questionId, ответ $answerId');
   }
