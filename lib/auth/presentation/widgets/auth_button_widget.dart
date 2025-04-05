@@ -31,7 +31,8 @@ class AuthButtonWidget extends StatelessWidget {
           if (model!.validate()) {
             try {
               token = await model.auth();
-              Navigator.popAndPushNamed(context, AppRoutes.main);
+              if (token.isNotEmpty)
+                Navigator.popAndPushNamed(context, AppRoutes.main);
             }
             // что-то придумать
             catch (ex) {
