@@ -59,7 +59,7 @@ class MockVotingRepository implements VotingRepository {
 
     // Создаем историю завершенных голосований
     for (int i = 1; i <= 3; i++) {
-      final String id = 'hist$i';
+      final String id = 'hist${i+3}';
       final List<FileInfo> files = [];
       final String fileId = '${id}_protocol';
       final String fileName = 'Протокол голосования #$i.pdf';

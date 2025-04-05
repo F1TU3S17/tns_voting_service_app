@@ -19,6 +19,7 @@ class InfoScreen extends StatefulWidget {
 
 class _InfoScreenState extends State<InfoScreen> {
   String? selectedOption;
+  int? selectedOptionId;
 
   bool isFirstBuild = true;
   @override
@@ -26,6 +27,16 @@ class _InfoScreenState extends State<InfoScreen> {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final model = InfoScreenModelProvider.of(context)!.model;
+    selectedOption = model.getVoteTextByVoteId();
+    
+    // Определение цветов в зависимости от темы
+    final isDark = theme.brightness == Brightness.dark;
+    final backgroundColor = isDark ? theme.colorScheme.surface : Colors.white;
+    final borderColor = isDark ? theme.colorScheme.primaryContainer : theme.colorScheme.primary;
+    final cardColor = isDark ? theme.colorScheme.surfaceVariant : Colors.white;
+    final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
+    final dividerColor = isDark ? Colors.white24 : Colors.grey.shade300;
+
     Future<void> _openPdf(String assetPath) async {
       try {
         final byteData = await rootBundle.load(assetPath);
@@ -63,15 +74,15 @@ class _InfoScreenState extends State<InfoScreen> {
             ),
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(left: 8, top: 20, right: 8),
+                padding: const EdgeInsets.only(left: 8, top: 20, right: 8, bottom: 16),
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   alignment: Alignment.topCenter,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: backgroundColor,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: theme.colorScheme.primary,
+                      color: borderColor,
                       width: 2.0,
                     ),
                     boxShadow: [
@@ -85,39 +96,58 @@ class _InfoScreenState extends State<InfoScreen> {
                   child: Container(
                     constraints: const BoxConstraints(maxWidth: 600),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                          child: Column(
-                            children: [
-                              Text(
-                                'Дата окончания: ${parseDate(model.questionDate!)}',
-                                style: textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurface,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.bolt,
-                                    color: theme.colorScheme.secondary,
-                                    size: 16,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Проголосовало: ${model.questionDetail?.votersCount}/${model.questionDetail?.votersTotal}',
-                                    style: textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurface,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                        // Дата окончания
+                        _buildInfoSection(
+                          icon: Icons.event,
+                          title: 'Дата окончания:',
+                          value: parseDate(model.questionDate!),
+                          textTheme: textTheme,
+                          textColor: textColor,
+                          iconColor: theme.colorScheme.secondary,
                         ),
-                        const SizedBox(height: 32),
+                        
+                        const SizedBox(height: 12),
+                        
+                        // Информация об участниках
+                        _buildInfoSection(
+                          icon: Icons.people,
+                          title: 'Участники:',
+                          value: model.questionDetail?.votingTypeText ?? '',
+                          textTheme: textTheme,
+                          textColor: textColor,
+                          iconColor: theme.colorScheme.secondary,
+                        ),
+                        
+                        const SizedBox(height: 12),
+                        
+                        // Тип принятия решения
+                        _buildInfoSection(
+                          icon: Icons.how_to_vote,
+                          title: 'Тип принятия решения:',
+                          value: model.questionDetail?.votingWayText ?? '',
+                          textTheme: textTheme,
+                          textColor: textColor,
+                          iconColor: theme.colorScheme.secondary,
+                        ),
+                        
+                        const SizedBox(height: 12),
+                        
+                        // Количество проголосовавших
+                        _buildInfoSection(
+                          icon: Icons.bolt,
+                          title: 'Проголосовало:',
+                          value: '${model.questionDetail?.votersCount}/${model.questionDetail?.votersTotal}',
+                          textTheme: textTheme,
+                          textColor: textColor,
+                          iconColor: theme.colorScheme.secondary,
+                        ),
+                        
+                        const SizedBox(height: 16),
+                        Divider(color: dividerColor, thickness: 1),
+                        const SizedBox(height: 12),
+                        
                         // Секция с прикрепленными файлами
                         if (model.questionDetail!.files.isNotEmpty) ...[
                           Align(
@@ -126,6 +156,7 @@ class _InfoScreenState extends State<InfoScreen> {
                               'Прикрепленные файлы:',
                               style: textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
+                                color: textColor,
                               ),
                             ),
                           ),
@@ -138,12 +169,7 @@ class _InfoScreenState extends State<InfoScreen> {
                                 const SizedBox(height: 8),
                             itemBuilder: (context, index) {
                               final file = model.questionDetail!.files[index];
-                              // final file = attachedFiles[index];
-                              // final isPdf = file['path']!.endsWith('.pdf');
-
                               return InkWell(
-                                //onTap: () => _openPdf(file['path']!),
-                                //onTab: () =>
                                 borderRadius: BorderRadius.circular(8),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
@@ -151,10 +177,10 @@ class _InfoScreenState extends State<InfoScreen> {
                                     horizontal: 16,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: cardColor,
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(
-                                      color: Colors.grey.shade300,
+                                      color: dividerColor,
                                     ),
                                   ),
                                   child: Row(
@@ -168,27 +194,51 @@ class _InfoScreenState extends State<InfoScreen> {
                                       Expanded(
                                         child: Text(
                                           file.name,
-                                          style: textTheme.bodyMedium,
+                                          style: textTheme.bodyMedium?.copyWith(
+                                            color: textColor,
+                                          ),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                      const Icon(Icons.chevron_right),
+                                      Icon(Icons.chevron_right, color: textColor),
                                     ],
                                   ),
                                 ),
                               );
                             },
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 16),
+                          Divider(color: dividerColor, thickness: 1),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Описание:',
+                            style: textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
                           Container(
                             margin: const EdgeInsets.symmetric(horizontal: 0),
                             child: Text(
                               model.questionDetail!.description,
-                              style: textTheme.bodyLarge,
+                              style: textTheme.bodyLarge?.copyWith(
+                                color: textColor,
+                              ),
                               textAlign: TextAlign.left,
                             ),
                           ),
-                          const SizedBox(height: 32),
+                          const SizedBox(height: 16),
+                          Divider(color: dividerColor, thickness: 1),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Ваш голос:',
+                            style: textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -196,29 +246,38 @@ class _InfoScreenState extends State<InfoScreen> {
                                 child: Column(
                                   children: [
                                     buildVoteButton(
+                                      theme: theme,
                                       label: 'Поддержать',
                                       color: Colors.green,
                                       isSelected:
                                           selectedOption == 'Поддержать',
-                                      onTap: () => setState(
-                                          () => selectedOption = 'Поддержать'),
+                                      onTap: () => setState(() {
+                                        selectedOption = 'Поддержать';
+                                        model.saveVoteOption(0);
+                                      }),
                                     ),
                                     const SizedBox(height: 8),
                                     buildVoteButton(
+                                      theme: theme,
                                       label: 'Воздержаться',
                                       color: Colors.orange,
                                       isSelected:
                                           selectedOption == 'Воздержаться',
-                                      onTap: () => setState(() =>
-                                          selectedOption = 'Воздержаться'),
+                                      onTap: () => setState(() {
+                                        selectedOption = 'Воздержаться';
+                                        model.saveVoteOption(1);
+                                      }),
                                     ),
                                     const SizedBox(height: 8),
                                     buildVoteButton(
+                                      theme: theme,
                                       label: 'Против',
                                       color: Colors.red,
                                       isSelected: selectedOption == 'Против',
-                                      onTap: () => setState(
-                                          () => selectedOption = 'Против'),
+                                      onTap: () => setState(() {
+                                        selectedOption = 'Против';
+                                        model.saveVoteOption(2);
+                                      }),
                                     ),
                                   ],
                                 ),
@@ -234,5 +293,42 @@ class _InfoScreenState extends State<InfoScreen> {
               ),
             ),
           );
+  }
+  
+  // Виджет для отображения информационных секций
+  Widget _buildInfoSection({
+    required IconData icon,
+    required String title,
+    required String value,
+    required TextTheme textTheme,
+    required Color textColor,
+    required Color iconColor,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          icon,
+          color: iconColor,
+          size: 20,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: textTheme.bodyMedium?.copyWith(color: textColor),
+              children: [
+                TextSpan(
+                  text: title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const TextSpan(text: ' '),
+                TextSpan(text: value),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

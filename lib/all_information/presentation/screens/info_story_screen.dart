@@ -9,7 +9,6 @@ import 'package:tns_voting_service_app/all_information/presentation/widgets/butt
 import 'package:tns_voting_service_app/all_information/presentation/widgets/color_for_grapf.dart';
 import 'package:tns_voting_service_app/all_information/presentation/widgets/prevue-part.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
-import 'package:tns_voting_service_app/core/utils/parse_date.dart';
 import 'package:tns_voting_service_app/theme/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -23,6 +22,7 @@ class InfoStoryScreen extends StatefulWidget {
 
 class _InfoStoryScreenState extends State<InfoStoryScreen> {
   String? selectedOption;
+  int? selectedOptionId;
   List<String> supporters = [
     'Иванов И.',
     'Петров П.',
@@ -70,6 +70,16 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
     final textTheme = theme.textTheme;
     final model = InfoScreenModelProvider.of(context)!.model;
 
+    // Определение цветов в зависимости от темы
+    final backgroundColor = isDark ? AppTheme.darkCardColor : theme.colorScheme.surface;
+    final borderColor = isDark ? theme.colorScheme.primaryContainer : theme.colorScheme.primary;
+    final cardColor = isDark ? AppTheme.darkCardColor : Colors.white;
+    final textColor = isDark ? AppTheme.darkTextColor : Colors.black87;
+    final dividerColor = isDark ? Colors.grey.shade800 : Colors.grey.shade300;
+
+    // Получаем текущее значение голосования из модели
+    selectedOption = model.getVoteTextByVoteId();
+
     if (isFirstBuild) {
       model.initQuestionDetail(widget.questionId);
       isFirstBuild = false;
@@ -94,17 +104,15 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
             ),
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(left: 8, top: 20, right: 8),
+                padding: const EdgeInsets.only(left: 8, top: 20, right: 8, bottom: 16),
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   alignment: Alignment.topCenter,
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? AppTheme.darkCardColor
-                        : theme.colorScheme.surface,
+                    color: backgroundColor,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: theme.colorScheme.primary,
+                      color: borderColor,
                       width: 2.0,
                     ),
                     boxShadow: [
@@ -120,7 +128,9 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                   child: Container(
                     constraints: const BoxConstraints(maxWidth: 600),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Сохраняем использование PrevuePart компонента
                         PrevuePart(
                           context: context,
                           questionDate: model.questionDate!,
@@ -128,18 +138,18 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                           votersTotal: model.questionDetail?.votersTotal,
                           description: model.questionDetail?.description ?? '',
                         ),
-                        const SizedBox(height: 32),
+                        
+                        const SizedBox(height: 16),
+                        Divider(color: dividerColor, thickness: 1),
+                        const SizedBox(height: 12),
+                        
+                        // Секция с прикрепленными файлами
                         if (model.questionDetail!.files.isNotEmpty) ...[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Прикрепленные файлы:',
-                              style: textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: isDark
-                                    ? AppTheme.darkTextColor
-                                    : Colors.black87,
-                              ),
+                          Text(
+                            'Прикрепленные файлы:',
+                            style: textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -153,21 +163,16 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                               final file = model.questionDetail!.files[index];
                               return InkWell(
                                 borderRadius: BorderRadius.circular(8),
-                                //onTap: () => _openPdf(file.path),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 12,
                                     horizontal: 16,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? AppTheme.darkCardColor
-                                        : Colors.white,
+                                    color: cardColor,
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(
-                                      color: isDark
-                                          ? Colors.grey.shade800
-                                          : Colors.grey.shade300,
+                                      color: dividerColor,
                                     ),
                                   ),
                                   child: Row(
@@ -184,9 +189,7 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                                         child: Text(
                                           file.name,
                                           style: textTheme.bodyMedium?.copyWith(
-                                            color: isDark
-                                                ? AppTheme.darkTextColor
-                                                : Colors.black87,
+                                            color: textColor,
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -203,8 +206,22 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                               );
                             },
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 16),
+                          Divider(color: dividerColor, thickness: 1),
+                          const SizedBox(height: 12),
                         ],
+                        
+                        // Заголовок для секции голосования
+                        Text(
+                          'Ваш голос:',
+                          style: textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: textColor,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        
+                        // Кнопки голосования и график
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -213,44 +230,65 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                               child: Column(
                                 children: [
                                   buildVoteButton(
+                                    theme: theme,
                                     label: 'Поддержать',
                                     color: Colors.green,
                                     isSelected: selectedOption == 'Поддержать',
-                                    onTap: () => setState(
-                                        () => selectedOption = 'Поддержать'),
+                                    onTap: () => setState(() {
+                                      selectedOption = 'Поддержать';
+                                      model.saveVoteOption(0);
+                                    }),
                                   ),
                                   const SizedBox(height: 8),
                                   buildVoteButton(
+                                    theme: theme,
                                     label: 'Воздержаться',
                                     color: Colors.orange,
                                     isSelected:
                                         selectedOption == 'Воздержаться',
-                                    onTap: () => setState(
-                                        () => selectedOption = 'Воздержаться'),
+                                    onTap: () => setState(() {
+                                      selectedOption = 'Воздержаться';
+                                      model.saveVoteOption(1);
+                                    }),
                                   ),
                                   const SizedBox(height: 8),
                                   buildVoteButton(
+                                    theme: theme,
                                     label: 'Против',
                                     color: Colors.red,
                                     isSelected: selectedOption == 'Против',
-                                    onTap: () => setState(
-                                        () => selectedOption = 'Против'),
+                                    onTap: () => setState(() {
+                                      selectedOption = 'Против';
+                                      model.saveVoteOption(2);
+                                    }),
                                   ),
                                 ],
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 32),
+                        
+                        const SizedBox(height: 16),
+                        Divider(color: dividerColor, thickness: 1),
+                        const SizedBox(height: 12),
+                        
+                        // Заголовок для таблицы результатов
+                        Text(
+                          'Результаты голосования:',
+                          style: textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: textColor,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        
+                        // Таблица с результатами голосования
                         Container(
                           decoration: BoxDecoration(
-                            color:
-                                isDark ? AppTheme.darkCardColor : Colors.white,
+                            color: cardColor,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: isDark
-                                  ? Colors.grey.shade800
-                                  : Colors.grey.shade300,
+                              color: dividerColor,
                               width: 1,
                             ),
                           ),
@@ -260,9 +298,7 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                                 decoration: BoxDecoration(
                                   border: Border(
                                     bottom: BorderSide(
-                                      color: isDark
-                                          ? Colors.grey.shade800
-                                          : Colors.grey.shade300,
+                                      color: dividerColor,
                                       width: 1,
                                     ),
                                   ),
@@ -291,10 +327,10 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 24),
                             ],
                           ),
                         ),
+                        const SizedBox(height: 8),
                       ],
                     ),
                   ),

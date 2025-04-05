@@ -103,7 +103,7 @@ abstract class AppTheme {
         ),
         bodySmall: TextStyle(
           fontSize: 12,
-          fontWeight: FontWeight.normal,
+          fontWeight: FontWeight.bold,
           color: Colors.black54,
         ),
         labelLarge: TextStyle(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 Widget buildVoteButton({
+  required ThemeData theme,
   required String label,
   required Color color,
   required bool isSelected,
@@ -38,7 +39,7 @@ Widget buildVoteButton({
           Text(
             label,
             style: TextStyle(
-              color: isSelected ? color : Colors.black,
+              color: isSelected ? color : theme.colorScheme.onSurface,
               fontSize: 14,
             ),
           ),

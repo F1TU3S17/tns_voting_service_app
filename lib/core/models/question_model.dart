@@ -72,6 +72,24 @@ class QuestionDetail {
     required this.conferenceLink,
   });
 
+  String get votingTypeText {
+    switch (votingType) {
+      case VotingType.com:
+        return 'Комитет';
+      case VotingType.bod:
+        return 'Совет директоров';
+    }
+  }
+
+  String get votingWayText {
+    switch (votingWay) {
+      case VotingWay.majority:
+        return 'Большинство голосов';
+      case VotingWay.unanimous:
+        return 'Единогласие';
+    }
+  }
+
   factory QuestionDetail.fromJson(Map<String, dynamic> json) {
     return QuestionDetail(
       id: json['id'],

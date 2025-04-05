@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tns_voting_service_app/core/database/app_database.dart';
 import 'package:tns_voting_service_app/core/models/question_model.dart';
 import 'package:tns_voting_service_app/core/repository/repository_provider.dart';
 import 'package:tns_voting_service_app/core/repository/voting_repository.dart';
@@ -11,6 +12,9 @@ class InfoScreenModel extends ChangeNotifier {
   QuestionDetail? questionDetail;
   // ignore: prefer_typing_uninitialized_variables
   late final questionDate;
+
+  int? voteOptionId;
+
 
   InfoScreenModel(DateTime date) {
     questionDate = date;
@@ -27,7 +31,38 @@ class InfoScreenModel extends ChangeNotifier {
   Future<void> initQuestionDetail(String questionId) async {
     isLoading = true;
     questionDetail = (await repository.getQuestionDetails(questionId));
+    voteOptionId = await getVote(questionId);
     notifyListeners();
     isLoading = false;
   }
+
+  Future<int?> getVote(String questionId) async {
+    return await AppDatabase.getVote(questionId);
+  }
+
+  Future<void> saveVote(String questionId, int voteId) async {
+    await AppDatabase.saveVote(questionId, voteId);
+  }
+
+  Future<void> saveVoteOption(int voteId) async {
+    await saveVote(questionDetail!.id, voteId);
+    voteOptionId = voteId;
+    notifyListeners();
+  }
+
+  String? getVoteTextByVoteId(){
+    return _voteOptions[voteOptionId];
+  }
+
+  Future<String?> getVoteText(String questionId) async {
+    final voteId = await getVote(questionId);
+    return _voteOptions[voteId!];
+  }
+
+  static const Map<int?, String?> _voteOptions = {
+    0: 'Поддержать',
+    1: 'Воздержаться',
+    2: 'Против',
+    null: null,
+  };
 }
