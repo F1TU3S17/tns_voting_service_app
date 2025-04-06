@@ -24,6 +24,8 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
   List<String> supporters = [
     'Иванов И.',
     'Петров П.',
+    'Сидоров С.',
+    'Иванов И.'
   ];
   List<String> abstained = ['Смирнов С.', 'Кузнецов К.'];
   List<String> opposed = ['Васильев В.', 'Николаев Н.', 'Фёдоров Ф.'];

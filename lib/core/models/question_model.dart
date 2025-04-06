@@ -45,6 +45,7 @@ class FileInfo {
 }
 
 enum VotingType { com, bod }
+
 enum VotingWay { majority, unanimous }
 
 class QuestionDetail {
