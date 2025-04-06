@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tns_voting_service_app/all_information/domain/state/info_screen_state.dart';
 import 'package:tns_voting_service_app/all_information/presentation/widgets/buttoms_golos.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
+import 'package:tns_voting_service_app/core/models/question_model.dart';
 import 'package:tns_voting_service_app/core/utils/parse_date.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:open_file/open_file.dart';
@@ -442,6 +443,8 @@ class _InfoScreenState extends State<InfoScreen> {
                                       onTap: () => setState(() {
                                         selectedOption = 'Поддержать';
                                         model.saveVoteOption(0);
+                                        model.repository
+                                            .vote(widget.questionId, 0);
                                       }),
                                     ),
                                     const SizedBox(height: 8),
@@ -465,6 +468,8 @@ class _InfoScreenState extends State<InfoScreen> {
                                       onTap: () => setState(() {
                                         selectedOption = 'Против';
                                         model.saveVoteOption(2);
+                                        model.repository
+                                            .vote(widget.questionId, 1);
                                       }),
                                     ),
                                   ],
