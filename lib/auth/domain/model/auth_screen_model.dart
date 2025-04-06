@@ -53,8 +53,8 @@ class AuthScreenModel extends ChangeNotifier {
       // Валидация пароля
       if (_password.isEmpty) {
         _passwordError = 'Введите пароль';
-      } else if (_password.length < 6) {
-        _passwordError = 'Пароль слишком короткий (мин. 6 символов)';
+      } else if (_password.length < 3) {
+        _passwordError = 'Пароль слишком короткий (мин. 3 символов)';
       } else {
         _passwordError = '';
       }

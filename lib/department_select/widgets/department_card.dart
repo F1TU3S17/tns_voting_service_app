@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:tns_voting_service_app/app/app_routes.dart';
+import 'package:tns_voting_service_app/home/presentation/screens/home_screen.dart';
 
 class DepartmentCard extends StatelessWidget {
   final String name;
   final int voteCount;
   final String imageUrl;
+  final int departmentId;
 
   const DepartmentCard({
     super.key,
     required this.name,
     required this.voteCount,
     required this.imageUrl,
+    required this.departmentId,
   });
 
   @override
@@ -29,7 +33,14 @@ class DepartmentCard extends StatelessWidget {
           ),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
-            onTap: () {}, // обработка тапа если надо
+            onTap: () {
+              final departmentIdStr = departmentId.toString();
+              Navigator.pushNamed(
+                context,
+                AppRoutes.voteList,
+                arguments: {"id": departmentIdStr, "name": name}
+              );
+            }, 
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),

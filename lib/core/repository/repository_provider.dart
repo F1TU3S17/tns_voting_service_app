@@ -5,7 +5,7 @@ import 'voting_repository.dart';
 import 'voting_repository_impl.dart';
 
 class RepositoryProvider {
-  static bool _useMock = true; // Флаг для переключения между моком и реальным API
+  static bool _useMock = false; // Флаг для переключения между моком и реальным API
   static VotingRepository? _repository;
 
   /// Получение экземпляра репозитория

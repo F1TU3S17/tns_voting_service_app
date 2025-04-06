@@ -23,9 +23,16 @@ class HomeScreenModel extends ChangeNotifier{
   ///
   /// Устанавливает флаг загрузки в начале и конце операции.
   /// Уведомляет слушателей об обновлении данных.
-  Future<void> initQuestions() async{
+  Future<void> initQuestions(String departmentId) async{
     isLoadind = true;
-    questions = await repository.getQuestions();
+    final allQuestions = await repository.getQuestions();
+    final List<QuestionShort> _questions =[];
+    for (var question in allQuestions) {
+      if (question.departmentId == departmentId) {
+        _questions.add(question);
+      }
+    }
+    questions = _questions;
     notifyListeners();
     isLoadind = false;
   }

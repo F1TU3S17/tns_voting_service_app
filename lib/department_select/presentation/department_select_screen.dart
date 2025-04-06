@@ -45,25 +45,9 @@ class _DepartmentSelectScreenState extends State<DepartmentSelectScreen> {
                               horizontal: 2.0, vertical: 4.0),
                           child: DepartmentCard(
                             name: model!.departments[index].name,
-                            voteCount: model.departments[index].voteCount,
+                            voteCount: model.departments[index].voteCount ?? 0,
                             imageUrl: 'assets/App_logo.png',
-                          ),
-                        ),
-                        Positioned.fill(
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  AppRoutes.voteList,
-                                  arguments: model.departments[index].name,
-                                );
-                              },
-                              customBorder: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
+                            departmentId: model.departments[index].id,
                           ),
                         ),
                       ],

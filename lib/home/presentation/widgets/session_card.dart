@@ -57,6 +57,7 @@ class _SessionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -87,6 +88,7 @@ class _SessionContent extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _SessionDescription(description: description, theme: theme),
           _SessionMetadata(
@@ -138,35 +140,35 @@ class _SessionMetadata extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      flex: 1,
+    return Container(
+      alignment: Alignment.centerRight,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.person_2_outlined),
-              Expanded(
-                child: Text(
-                  sessionType,
-                  style: theme.textTheme.labelSmall,
-                  maxLines: 2,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                ),
+              SizedBox(width: 4),
+              Text(
+                sessionType,
+                style: theme.textTheme.labelSmall,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
+          SizedBox(height: 4),
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.bolt),
-              Expanded(
-                child: Text(
-                  votesInfo,
-                  style: theme.textTheme.labelSmall,
-                  maxLines: 2,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                ),
+              SizedBox(width: 4),
+              Text(
+                votesInfo,
+                style: theme.textTheme.labelSmall,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

@@ -189,13 +189,11 @@ class _InfoScreenState extends State<InfoScreen> {
                         ),
 
                         // Ссылка на конференцию, если она есть
-                        if (model.questionDetail?.conferenceLink != null &&
-                            model
-                                .questionDetail!.conferenceLink.isNotEmpty) ...[
+                        if (model.questionDetail?.conferenceLink != null) ...[
                           const SizedBox(height: 12),
                           InkWell(
                             onTap: () => _launchURL(
-                                model.questionDetail!.conferenceLink),
+                                model.questionDetail!.conferenceLink!),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -218,7 +216,7 @@ class _InfoScreenState extends State<InfoScreen> {
                                         ),
                                       ),
                                       Text(
-                                        model.questionDetail!.conferenceLink,
+                                        model.questionDetail!.conferenceLink!,
                                         style: textTheme.bodyMedium?.copyWith(
                                           color: theme.colorScheme.onSurface,
                                           decoration: TextDecoration.underline,

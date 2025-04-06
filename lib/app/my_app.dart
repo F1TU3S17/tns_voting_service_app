@@ -53,10 +53,20 @@ class AppCore extends StatelessWidget {
               AppRoutes.voteStory: (context) => const HistoryPage(),
               AppRoutes.main: (context) => const MainNavigation(),
               AppRoutes.departmentSelect: (context) => DepartmentSelectScreen(),
-              AppRoutes.voteList: (context) {
-                final departmentName =
-                    ModalRoute.of(context)!.settings.arguments as String;
-                return HomePage(departmentName: departmentName);
+            AppRoutes.voteList: (context) {
+                final arguments = ModalRoute.of(context)!.settings.arguments as Map;
+                String departmentName = '';
+                String departmentId = '';
+                
+                if (arguments is Map<String, dynamic>) {
+                  departmentName = arguments['name'] as String? ?? '';
+                  departmentId = arguments['id'] as String? ?? '';
+                } else if (arguments is String) {
+                  // Обработка случая, когда передается строка
+                  departmentId = arguments as String;
+                }
+                
+                return HomePage(departmentName: departmentName, departmentId: departmentId);
               },
             }),
           );
