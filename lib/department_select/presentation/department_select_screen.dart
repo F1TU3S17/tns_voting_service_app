@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tns_voting_service_app/app/app_routes.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
-import 'package:tns_voting_service_app/department_select/state/department_model.dart';
-import 'package:tns_voting_service_app/department_select/state/department_model_provider.dart';
+import 'package:tns_voting_service_app/department_select/domain/state/department_model.dart';
+import 'package:tns_voting_service_app/department_select/domain/state/department_model_provider.dart';
 import 'package:tns_voting_service_app/department_select/widgets/department_card.dart';
 
 class DepartmentSelectScreen extends StatefulWidget {
@@ -27,7 +26,6 @@ class _DepartmentSelectScreenState extends State<DepartmentSelectScreen> {
       child: Builder(
         builder: (BuildContext context) {
           final model = DepartmentModelProvider.of(context);
-          final theme = Theme.of(context);
           return Stack(
             children: [
               Scaffold(
