@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+import 'package:tns_voting_service_app/core/entity/user.dart';
 import 'package:tns_voting_service_app/core/models/department_model.dart';
 import '../models/login_model.dart';
 import '../models/question_model.dart';
@@ -25,15 +26,53 @@ class MockVotingRepository implements VotingRepository {
 
   void _initMockData() {
     // Создаем мок-данные для вопросов
-    for (int i = 1; i <= 5; i++) {
+    final List<String> realTitles = [
+      'Утверждение годового отчета за 2023 г.',
+      'Распределение прибыли за 2023 г.',
+      'Выплата дивидендов за 2023 г.',
+      'Избрание Совета директоров',
+      'Утверждение аудитора на 2024 г.',
+      'Одобрение сделки с ПАО Сбербанк',
+      'Изменения в Устав Общества',
+      'Положение о выплатах Совету директоров',
+    ];
+    
+    final List<String> realDescriptions = [
+      'Согласно п. 11 ст. 65 ФЗ "Об акционерных обществах" вопросы годового отчета должны быть предварительно утверждены Советом директоров Общества',
+      'В соответствии с данными бухгалтерской отчетности Общества за 2023 год, чистая прибыль составила 284,7 млн. руб. Совет директоров рекомендует направить 50% чистой прибыли на выплату дивидендов, оставшуюся часть - на инвестиционные проекты и погашение кредитов.',
+      'Совет директоров рекомендует выплатить дивиденды по обыкновенным акциям Общества по итогам 2023 года в размере 0,132548 руб. на одну акцию в денежной форме в срок до 31 декабря 2024 года.',
+      'В соответствии с Уставом Общества, количественный состав Совета директоров составляет 7 человек. Акционерам предлагается избрать Совет директоров из кандидатов, выдвинутых акционерами Общества.',
+      'Предлагается утвердить ООО "Эрнст энд Янг" в качестве аудитора бухгалтерской отчетности Общества по РСБУ и МСФО на 2024 год.',
+      'Рассмотрение вопроса о предоставлении согласия на заключение кредитного договора с ПАО Сбербанк на сумму 1,7 млрд рублей для рефинансирования текущей задолженности.',
+      'Предлагается внести изменения в Устав Общества в связи с изменениями требований действующего законодательства.',
+      'Предлагается утвердить новую редакцию Положения о выплате членам Совета директоров Общества вознаграждений и компенсаций.',
+    ];
+
+    final List<String> fileNames = [
+      'Годовой отчет ПАО ТНС энерго за 2023 год.pdf',
+      'Бухгалтерская отчетность за 2023 год.pdf',
+      'Заключение Ревизионной комиссии.pdf',
+      'Проект решения Совета директоров.pdf',
+      'Заключение аудитора.pdf',
+      'Проект изменений в Устав.pdf',
+      'Пояснительная записка.pdf',
+      'Расчет стоимости чистых активов.pdf',
+      'Список кандидатов в Совет директоров.pdf',
+      'Проект Положения о выплате вознаграждений.pdf',
+    ];
+    
+    final List<String> departmentIds = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+
+    for (int i = 1; i <= 8; i++) {
       final String id = 'q$i';
-      final int votersTotal = _random.nextInt(10) + 10;
+      final int votersTotal = 10 + _random.nextInt(16); // От 10 до 25
+      final int votersCount = _random.nextInt(votersTotal);
       final questionShort = QuestionShort(
         id: id,
-        title: 'Вопрос #$i',
-        description: 'Описание вопроса #$i для голосования директоров',
-        departmentId: '0',
-        votersCount: _random.nextInt(votersTotal),
+        title: realTitles[i - 1],
+        description: realDescriptions[i - 1].substring(0, min(100, realDescriptions[i - 1].length)) + '...',
+        departmentId: departmentIds[_random.nextInt(departmentIds.length)],
+        votersCount: votersCount,
         votersTotal: votersTotal,
         endDate: DateTime.now().add(Duration(days: _random.nextInt(14) + 1)),
       );
@@ -41,50 +80,79 @@ class MockVotingRepository implements VotingRepository {
 
       // Создаем детальную информацию для каждого вопроса
       final List<FileInfo> files = [];
-      for (int j = 1; j <= _random.nextInt(3) + 1; j++) {
-        final String fileId = '${id}_file$j';
-        final String fileName = 'Файл $j для вопроса #$i.pdf';
+      final int filesCount = _random.nextInt(3) + 1;
+      final List<int> selectedFileIndices = [];
+      
+      for (int j = 0; j < filesCount; j++) {
+        int fileIndex;
+        do {
+          fileIndex = _random.nextInt(fileNames.length);
+        } while (selectedFileIndices.contains(fileIndex));
+        
+        selectedFileIndices.add(fileIndex);
+        final String fileId = '${id}_file$fileIndex';
+        final String fileName = fileNames[fileIndex];
         files.add(FileInfo(id: fileId, name: fileName));
-        _files[fileId] = 'Содержимое файла $j для вопроса #$i';
+        _files[fileId] = 'Содержимое файла ${fileName}';
       }
 
       _questionDetails[id] = QuestionDetail(
         id: id,
-        title: questionShort.title,
-        description: questionShort.description,
+        title: realTitles[i - 1],
+        description: realDescriptions[i - 1],
         files: files,
-        votersCount: questionShort.votersCount,
-        votersTotal: questionShort.votersTotal,
-        votingType: _random.nextBool() ? VotingType.com : VotingType.bod,
-        votingWay:
-            _random.nextBool() ? VotingWay.majority : VotingWay.unanimous,
-        conferenceLink: 'https://zoom.us/j/123456789', departmentId: '1',
+        votersCount: votersCount,
+        votersTotal: votersTotal,
+        votingType: i % 3 == 0 ? VotingType.com : VotingType.bod,
+        votingWay: i % 4 == 0 ? VotingWay.unanimous : VotingWay.majority,
+        conferenceLink: 'https://zoom.us/j/${900000000 + _random.nextInt(99999999)}',
+        departmentId: departmentIds[_random.nextInt(departmentIds.length)],
       );
     }
 
     // Создаем историю завершенных голосований
-    for (int i = 1; i <= 3; i++) {
-      final String id = 'hist${i + 3}';
+    final List<String> completedTitles = [
+      'Промежуточные дивиденды за 9 мес. 2023 г.',
+      'Бизнес-план на 2024 г.',
+      'Договор с ООО "Энергосбыт"',
+      'Выбор страховой компании на 2024 г.',
+      'Одобрение сделки с заинтересованностью',
+    ];
+    
+    final List<String> completedDescriptions = [
+      'На основании данных промежуточной бухгалтерской отчетности за 9 месяцев 2023 года принято решение о выплате дивидендов в размере 0,08 руб. на одну обыкновенную акцию.',
+      'Бизнес-план на 2024 год утвержден с плановыми показателями: выручка - 24,7 млрд руб., EBITDA - 1,2 млрд руб., чистая прибыль - 350 млн руб.',
+      'Одобрено заключение договора поставки электроэнергии с ООО "Энергосбыт" на период с 01.01.2024 по 31.12.2024 на сумму 1,8 млрд руб.',
+      'По результатам тендера выбрана АО "Согласие" в качестве страховой компании для страхования имущества и ответственности на 2024 год.',
+      'Одобрена сделка по предоставлению поручительства ПАО "ТНС энерго Ростов-на-Дону" перед ВТБ (ПАО) по кредитному договору на сумму 800 млн руб.',
+    ];
+
+    for (int i = 0; i < 5; i++) {
+      final String id = 'hist${i + 1}';
       final List<FileInfo> files = [];
       final String fileId = '${id}_protocol';
-      final String fileName = 'Протокол голосования #$i.pdf';
+      final String fileName = 'Протокол голосования №${1000 + i} от ${_formatDate(DateTime.now().subtract(Duration(days: 30 + i * 15)))}.pdf';
       files.add(FileInfo(id: fileId, name: fileName));
       _files[fileId] = 'Содержимое протокола голосования #$i';
-      final int votersTotal = _random.nextInt(10) + 10;
+      final int votersTotal = 10 + _random.nextInt(16); // От 10 до 25
 
       _votingHistory.add(QuestionDetail(
         id: id,
-        title: 'Завершенное голосование #$i',
-        description: 'Описание завершенного голосования #$i',
+        title: completedTitles[i],
+        description: completedDescriptions[i],
         files: files,
-        votersCount: _random.nextInt(votersTotal),
+        votersCount: votersTotal, // Для завершенных - все проголосовали
         votersTotal: votersTotal,
-        votingType: _random.nextBool() ? VotingType.com : VotingType.bod,
-        votingWay:
-            _random.nextBool() ? VotingWay.majority : VotingWay.unanimous,
-        conferenceLink: 'https://zoom.us/j/123456789', departmentId: '1',
+        votingType: i % 2 == 0 ? VotingType.com : VotingType.bod,
+        votingWay: i % 3 == 0 ? VotingWay.unanimous : VotingWay.majority,
+        conferenceLink: '',
+        departmentId: departmentIds[_random.nextInt(departmentIds.length)],
       ));
     }
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
   }
 
   @override
@@ -274,10 +342,9 @@ class MockVotingRepository implements VotingRepository {
       Department(id: 5, name: 'ПАО «ТНС энерго Марий Эл»', voteCount: 7),
       Department(id: 6, name: 'ПАО «ТНС энерго Кубань»', voteCount: 7),
       Department(id: 7, name: 'АО «ТНС энерго Тула»', voteCount: 6),
-      Department(id: 8, name: 'АО «ТНС энерго Карелия', voteCount: 7),
+      Department(id: 8, name: 'АО «ТНС энерго Карелия»', voteCount: 7),
       Department(id: 9, name: 'ООО «ТНС энерго Пенза»', voteCount: 7),
-      Department(
-          id: 10, name: 'ООО «ТНС энерго Великий Новгород»', voteCount: 5),
+      Department(id: 10, name: 'ООО «ТНС энерго Великий Новгород»', voteCount: 5),
     ];
     await Future.delayed(Duration(milliseconds: 800));
     if (_token == null) {
@@ -286,4 +353,20 @@ class MockVotingRepository implements VotingRepository {
     return _mockData.map((d) => d.copyWith()).toList(); // Отправляем копии
   }
 
+  @override
+  Future<User> getUserInfo() async {
+    await Future.delayed(Duration(milliseconds: 800));
+    if (_token == null) {
+      throw Exception('Токен недействителен');
+    }
+    return User(
+      id: 1,
+      email: "petrov.a@tns-e.ru",
+      emailVerifiedAt: DateTime.now().subtract(Duration(days: 120)),
+      createdAt: DateTime.now().subtract(Duration(days: 365)),
+      updatedAt: DateTime.now().subtract(Duration(days: 30)),
+      ethAccount: "0x7FdC932Ab727A944C4458640da92124e8064D70B",
+      name: "Петров Александр Михайлович",
+    );
+  }
 }

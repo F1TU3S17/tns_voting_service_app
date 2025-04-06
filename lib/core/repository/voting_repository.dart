@@ -1,3 +1,4 @@
+import 'package:tns_voting_service_app/core/entity/user.dart';
 import 'package:tns_voting_service_app/core/models/department_model.dart';
 
 import '../models/login_model.dart';
@@ -24,6 +25,9 @@ abstract class VotingRepository {
 
   /// Получение истории завершенных голосований
   Future<List<QuestionDetail>> getVotingHistory();
+
+  /// Полечение информации о текущем пользователе
+  Future<User> getUserInfo();
 
   /// Проверка авторизации
   bool get isAuthenticated;

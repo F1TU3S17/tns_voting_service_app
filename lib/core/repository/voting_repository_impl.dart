@@ -1,3 +1,4 @@
+import 'package:tns_voting_service_app/core/entity/user.dart';
 import 'package:tns_voting_service_app/core/models/department_model.dart';
 
 import '../client/api/voting_client.dart';
@@ -32,12 +33,22 @@ class VotingRepositoryImpl implements VotingRepository {
 
   @override
   Future<void> vote(String questionId, int answerId) async {
-    await _client.vote(questionId, answerId);
+    try {
+      await _client.vote(questionId, answerId);
+    } catch (e) {
+      // Обработка ошибок при голосовании
+      return; // Пробрасываем ошибку дальше
+    }
   }
 
   @override
   Future<List<QuestionDetail>> getVotingHistory() async {
     return await _client.getVotingHistory();
+  }
+
+  @override
+  Future<User> getUserInfo() async {
+    return await _client.getUserInfo();
   }
 
   @override

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tns_voting_service_app/core/database/app_database.dart';
+import 'package:tns_voting_service_app/core/entity/user.dart';
 import 'package:tns_voting_service_app/core/models/department_model.dart';
 import '../../models/login_model.dart';
 import '../../models/question_model.dart';
@@ -19,9 +20,9 @@ class VotingClient {
   String? _token;
   final Duration _timeout = Duration(seconds: 15);
 
-  VotingClient({String baseUrl = 'http://4p0daa-5-101-181-183.ru.tuna.am'})
+  VotingClient({String baseUrl = 'https://n8yd98-5-101-181-183.ru.tuna.am'})
       : _client = http.Client(),
-        _baseUrl = "http://4p0daa-5-101-181-183.ru.tuna.am";
+        _baseUrl = "https://n8yd98-5-101-181-183.ru.tuna.am";
 
   Future<Map<String, String>> _getHeaders() async {
     final headers = {
@@ -140,9 +141,14 @@ class VotingClient {
   /// Скачивание файла
   Future<String> downloadFile(String fileId, String fileName) async {
     try {
-      // Получаем безопасное имя файла
-      final safeName = fileName.replaceAll(RegExp(r'[^\w\s\.\-]'), '_');
-
+       // Получаем безопасное имя файла
+      var safeName = fileName.replaceAll(RegExp(r'[^\w\s\.\-]'), '_');
+      
+      // Проверяем расширение файла и добавляем .pdf если нет
+      if (!safeName.toLowerCase().endsWith('.pdf')) {
+        safeName = '$safeName.pdf';
+      }
+      final headers = await _getHeaders();
       Directory directory;
 
       if (Platform.isAndroid) {
@@ -172,8 +178,9 @@ class VotingClient {
         }
       } else if (Platform.isIOS) {
         // iOS-специфичный код
-        // На iOS используем стандартную директорию документов приложения
-        directory = await getApplicationDocumentsDirectory();
+        // Для iOS лучше использовать временную директорию для файлов,
+        // которые будут открываться другими приложениями
+        directory = await getTemporaryDirectory();
       } else {
         // Для других платформ
         directory = await getApplicationDocumentsDirectory();
@@ -192,13 +199,24 @@ class VotingClient {
       // Проверяем, существует ли файл уже
       if (await file.exists()) {
         debugPrint('Файл уже существует: $filePath');
-        return filePath;
+        
+        // Для iOS проверяем размер файла, чтобы убедиться, что он не поврежден
+        if (Platform.isIOS) {
+          final fileSize = await file.length();
+          if (fileSize <= 0) {
+            debugPrint('Существующий файл имеет нулевой размер, загрузим заново');
+          } else {
+            return filePath;
+          }
+        } else {
+          return filePath;
+        }
       }
 
       final url =
-          "$_baseUrl/api/voting/files/$fileId"; // URL для скачивания файла
+          "$_baseUrl/api/files/$fileId"; // URL для скачивания файла
       // Скачиваем файл
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(url), headers: headers);
 
       if (response.statusCode == 200) {
         // Сохраняем файл
@@ -284,8 +302,6 @@ class VotingClient {
   }
 
   Future<List<Department>> getDepartments() async {
-    final _myToken = _token;
-    _token = '29|DKNSfcF84fVLFMb3FEWn8bZUBWwTwD4Rp4rHXSyEfcc18894';
     try {
       Map<String, String> headers = await _getHeaders();
       final response = await _client
@@ -305,5 +321,26 @@ class VotingClient {
     } catch (e) {
       throw Exception('Ошибка получения подразделений: $e');
     }
+  }
+
+  Future<User> getUserInfo() async{
+    try {
+      Map<String, String> headers = await _getHeaders();
+      final response = await _client
+          .get(
+            Uri.parse('$_baseUrl/api/profile'),
+            headers: headers,
+          )
+          .timeout(_timeout);
+
+      return _handleResponse(response, (data) => User.fromJson(data));
+    } on http.ClientException catch (e) {
+      throw Exception('Ошибка сети: ${e.message}');
+    } on TimeoutException catch (_) {
+      throw Exception('Превышено время ожидания ответа от сервера');
+    } catch (e) {
+      throw Exception('Ошибка получения информации о пользователе: $e');
+    }
+  
   }
 }

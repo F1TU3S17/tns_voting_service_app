@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tns_voting_service_app/app/app_routes.dart';
-import 'package:tns_voting_service_app/auth/domain/model/auth_screen_model.dart';
 import 'package:tns_voting_service_app/core/database/app_database.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
+import 'package:tns_voting_service_app/my_profile/domain/model/user_model.dart';
+import 'package:tns_voting_service_app/my_profile/domain/state/user_model_provider.dart';
 
 class ProfileMenuItem {
   final IconData icon;
@@ -17,11 +18,15 @@ class ProfileMenuItem {
 }
 
 class MyProfileScreen extends StatelessWidget {
-  const MyProfileScreen({super.key});
-
+  MyProfileScreen({super.key});
+  bool isFirstBuild = true;
+   final model = UserModel();
   @override
   Widget build(BuildContext context) {
-    final model = AuthScreenModel();
+    if (isFirstBuild) {
+      model.init();
+      isFirstBuild = false;
+    }
     final ThemeData theme = Theme.of(context);
     final List<ProfileMenuItem> menuItems = [
       ProfileMenuItem(
@@ -49,24 +54,43 @@ class MyProfileScreen extends StatelessWidget {
       ),
     ];
 
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: GradientAppBar(
-        title: "Личный кабинет",
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildProfileSection(context),
-            _buildMenuSection(context, menuItems),
-          ],
-        ),
+    return UserModelProvider(
+      userModel: model,
+      child: Builder(
+        builder: (context) {
+          final model = UserModelProvider.of(context)!.userModel;
+          if (model.isLoading) {
+            return const Scaffold(
+              appBar: GradientAppBar(
+                title: "Личный кабинет",
+              ),
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          return Scaffold(
+            backgroundColor: theme.scaffoldBackgroundColor,
+            appBar: GradientAppBar(
+              title: "Личный кабинет",
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildProfileSection(context),
+                  _buildMenuSection(context, menuItems),
+                ],
+              ),
+            ),
+          );
+        }
       ),
     );
   }
 
   Widget _buildProfileSection(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final model = UserModelProvider.of(context)!.userModel;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
@@ -95,7 +119,7 @@ class MyProfileScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'Иванов Иван Иванович',
+            model.getUser!.name,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -103,7 +127,14 @@ class MyProfileScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'ivaivaiva@tns.ru',
+            model.getUser!.email,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withAlpha(153),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            model.getUser!.ethAccount!,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withAlpha(153),
             ),
