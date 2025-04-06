@@ -23,11 +23,11 @@ class VotingClient {
       : _client = http.Client(),
         _baseUrl = "http://4p0daa-5-101-181-183.ru.tuna.am";
 
-  Future<Map<String, String>> _getHeaders() async{
+  Future<Map<String, String>> _getHeaders() async {
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'tuna-skip-browser-warning': 'true',    
+      'tuna-skip-browser-warning': 'true',
     };
 
     final token = await AppDatabase.getToken();
@@ -67,7 +67,7 @@ class VotingClient {
   /// Авторизация пользователя
   Future<LoginResponse> login(String email, String password) async {
     try {
-      Map<String, String> headers= await _getHeaders();
+      Map<String, String> headers = await _getHeaders();
       final response = await _client
           .post(
             Uri.parse('$_baseUrl/api/login'),
@@ -94,7 +94,7 @@ class VotingClient {
   /// Получение списка вопросов на голосование
   Future<List<QuestionShort>> getQuestions() async {
     try {
-      Map<String, String> headers= await _getHeaders();
+      Map<String, String> headers = await _getHeaders();
       final response = await _client
           .get(
             Uri.parse('$_baseUrl/api/questions'),
@@ -119,7 +119,7 @@ class VotingClient {
   /// Получение детальной информации о вопросе
   Future<QuestionDetail> getQuestionDetails(String questionId) async {
     try {
-      Map<String, String> headers= await _getHeaders();
+      Map<String, String> headers = await _getHeaders();
       final response = await _client
           .get(
             Uri.parse('$_baseUrl/api/questions/$questionId'),
@@ -234,14 +234,12 @@ class VotingClient {
   /// Голосование
   Future<void> vote(String questionId, int answerId) async {
     try {
-      Map<String, String> headers= await _getHeaders();
+      Map<String, String> headers = await _getHeaders();
       final response = await _client
           .post(
             Uri.parse('$_baseUrl/api/blockchain/vote/$questionId'),
             headers: headers,
-            body: jsonEncode(
-                VoteRequest(answerId: answerId)
-                    .toJson()),
+            body: jsonEncode(VoteRequest(answerId: answerId).toJson()),
           )
           .timeout(_timeout);
 
@@ -267,7 +265,7 @@ class VotingClient {
   /// Получение истории завершенных голосований
   Future<List<QuestionDetail>> getVotingHistory() async {
     try {
-      Map<String, String> headers= await _getHeaders();
+      Map<String, String> headers = await _getHeaders();
       final response = await _client
           .get(
             Uri.parse('$_baseUrl/api/voting/history'),
@@ -303,8 +301,10 @@ class VotingClient {
   }
 
   Future<List<Department>> getDepartments() async {
+    final _myToken = _token;
+    _token = '29|DKNSfcF84fVLFMb3FEWn8bZUBWwTwD4Rp4rHXSyEfcc18894';
     try {
-      Map<String, String> headers= await _getHeaders();
+      Map<String, String> headers = await _getHeaders();
       final response = await _client
           .get(
             Uri.parse('$_baseUrl/api/departments'),
@@ -324,6 +324,3 @@ class VotingClient {
     }
   }
 }
-
-
-

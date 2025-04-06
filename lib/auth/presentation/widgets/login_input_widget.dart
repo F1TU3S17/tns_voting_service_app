@@ -23,7 +23,7 @@ class LoginInputWidget extends StatelessWidget {
       child: TextField(
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: 'Логин',
+          hintText: 'E-mail',
           hintStyle:
               TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.6)),
           errorText: model!.loginError.isNotEmpty ? model.loginError : null,
