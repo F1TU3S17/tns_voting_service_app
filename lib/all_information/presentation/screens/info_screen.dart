@@ -99,6 +99,8 @@ class _InfoScreenState extends State<InfoScreen> {
     final cardColor = isDark ? theme.colorScheme.surfaceVariant : Colors.white;
     final textColor = isDark ? Colors.white : theme.colorScheme.onSurface;
     final dividerColor = isDark ? Colors.white24 : Colors.grey.shade300;
+    
+   
 
     if (isFirstBuild) {
       model.initQuestionDetail(widget.questionId);

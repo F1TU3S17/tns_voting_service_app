@@ -171,7 +171,7 @@ abstract class AppTheme {
       bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: darkTextColor),
       bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: darkTextColor),
       bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: darkSubtitleColor),
-      labelLarge: TextStyle(fontSize: 16, color: darkAccentColor),
+      labelLarge: TextStyle(fontSize: 14, color: darkAccentColor),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
