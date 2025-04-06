@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tns_voting_service_app/core/database/app_database.dart';
+import 'package:tns_voting_service_app/core/entity/user.dart';
 import 'package:tns_voting_service_app/core/models/department_model.dart';
 import '../../models/login_model.dart';
 import '../../models/question_model.dart';
@@ -19,9 +20,9 @@ class VotingClient {
   String? _token;
   final Duration _timeout = Duration(seconds: 15);
 
-  VotingClient({String baseUrl = 'http://4p0daa-5-101-181-183.ru.tuna.am'})
+  VotingClient({String baseUrl = 'https://gy8qg2-5-101-181-183.ru.tuna.am'})
       : _client = http.Client(),
-        _baseUrl = "http://4p0daa-5-101-181-183.ru.tuna.am";
+        _baseUrl = "https://gy8qg2-5-101-181-183.ru.tuna.am";
 
   Future<Map<String, String>> _getHeaders() async {
     final headers = {
@@ -301,8 +302,6 @@ class VotingClient {
   }
 
   Future<List<Department>> getDepartments() async {
-    final _myToken = _token;
-    _token = '29|DKNSfcF84fVLFMb3FEWn8bZUBWwTwD4Rp4rHXSyEfcc18894';
     try {
       Map<String, String> headers = await _getHeaders();
       final response = await _client
@@ -322,5 +321,26 @@ class VotingClient {
     } catch (e) {
       throw Exception('Ошибка получения подразделений: $e');
     }
+  }
+
+  Future<User> getUserInfo() async{
+    try {
+      Map<String, String> headers = await _getHeaders();
+      final response = await _client
+          .get(
+            Uri.parse('$_baseUrl/api/profile'),
+            headers: headers,
+          )
+          .timeout(_timeout);
+
+      return _handleResponse(response, (data) => User.fromJson(data));
+    } on http.ClientException catch (e) {
+      throw Exception('Ошибка сети: ${e.message}');
+    } on TimeoutException catch (_) {
+      throw Exception('Превышено время ожидания ответа от сервера');
+    } catch (e) {
+      throw Exception('Ошибка получения информации о пользователе: $e');
+    }
+  
   }
 }

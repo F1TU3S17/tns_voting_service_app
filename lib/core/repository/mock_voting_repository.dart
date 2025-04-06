@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+import 'package:tns_voting_service_app/core/entity/user.dart';
 import 'package:tns_voting_service_app/core/models/department_model.dart';
 import '../models/login_model.dart';
 import '../models/question_model.dart';
@@ -284,6 +285,23 @@ class MockVotingRepository implements VotingRepository {
       throw Exception('Токен недействителен');
     }
     return _mockData.map((d) => d.copyWith()).toList(); // Отправляем копии
+  }
+
+  @override
+  Future<User> getUserInfo() async{
+      await Future.delayed(Duration(milliseconds: 800));
+      if (_token == null) {
+        throw Exception('Токен недействителен');
+      }
+      return User(
+        id: 1,
+        email: "a.ivanov@tns-e.ru",
+        emailVerifiedAt: null,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        ethAccount: null,
+        name: "Иванов А. А.",
+      );
   }
 
 }
