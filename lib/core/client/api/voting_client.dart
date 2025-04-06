@@ -18,9 +18,9 @@ class VotingClient {
   String? _token;
   final Duration _timeout = Duration(seconds: 15);
 
-  VotingClient({String baseUrl = 'https://api.example.com/v1'})
+  VotingClient({String baseUrl = 'http://4p0daa-5-101-181-183.ru.tuna.am'})
       : _client = http.Client(),
-        _baseUrl = baseUrl;
+        _baseUrl = 'http://4p0daa-5-101-181-183.ru.tuna.am';
 
   Map<String, String> _getHeaders() {
     final headers = {
@@ -275,6 +275,8 @@ class VotingClient {
   }
 
   Future<List<Department>> getDepartments() async {
+    final _myToken = _token;
+    _token = '29|DKNSfcF84fVLFMb3FEWn8bZUBWwTwD4Rp4rHXSyEfcc18894';
     try {
       final response = await _client
           .get(
@@ -282,7 +284,7 @@ class VotingClient {
             headers: _getHeaders(),
           )
           .timeout(_timeout);
-
+      _token = _myToken;
       return _handleResponse(
           response,
           (data) =>
@@ -292,7 +294,14 @@ class VotingClient {
     } on TimeoutException catch (_) {
       throw Exception('Превышено время ожидания ответа от сервера');
     } catch (e) {
-      throw Exception('Ошибка получения истории голосований: $e');
+      throw Exception('Ошибка получения подразделений: $e');
     }
   }
 }
+
+// void main() async {
+//   final client = VotingClient();
+//   client._token = '2|uC4nZiEIPpWpLwgUE95m4qKETfIkCy0u16rctGZ025745224';
+//   List<Department> deps = await client.getDepartments();
+//   return;
+// }

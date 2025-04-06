@@ -3,14 +3,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class AppDatabase {
-
   static const _tokenboxName = 'tokenBox';
   static const _boxName = 'appBox';
   static const _boxVoites = 'votesBox';
+  static const _dataBox = 'dataBox';
   static const _tokenKey = 'token';
   static const _encryptionKey = 'encryptionKey';
 
-  
   static Future<void> _initTokenBox() async {
     if (!Hive.isBoxOpen(_tokenboxName)) {
       final secureStorage = FlutterSecureStorage();
@@ -38,7 +37,13 @@ class AppDatabase {
       await Hive.openBox<int>(_boxVoites);
     }
   }
-  
+
+  static Future<void> _initDataBox() async {
+    if (!Hive.isBoxOpen(_dataBox)) {
+      await Hive.openBox<String>(_dataBox);
+    }
+  }
+
   static Future<void> init() async {
     await Hive.initFlutter();
     await _initAppBox();
@@ -97,7 +102,4 @@ class AppDatabase {
     final box = Hive.box<int>(_boxVoites);
     await box.delete(questionId);
   }
-
-
-
 }

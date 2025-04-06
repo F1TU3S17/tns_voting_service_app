@@ -1,7 +1,7 @@
 class Department {
-  final String id;
+  final int id;
   final String name;
-  int voteCount;
+  int? voteCount;
 
   Department({
     required this.id,
@@ -10,7 +10,7 @@ class Department {
   });
 
   Department copyWith({
-    String? id,
+    int? id,
     String? name,
     int? voteCount,
   }) {
@@ -25,7 +25,7 @@ class Department {
     return Department(
       id: json['id'],
       name: json['name'],
-      voteCount: json['voteCount'],
+      voteCount: json['question_count'] ?? 0,
     );
   }
 }

@@ -126,7 +126,7 @@ class MockVotingRepository implements VotingRepository {
     try {
       // Получаем безопасное имя файла
       var safeName = fileName.replaceAll(RegExp(r'[^\w\s\.\-]'), '_');
-      
+
       // Проверяем расширение файла и добавляем .pdf если нет
       if (!safeName.toLowerCase().endsWith('.pdf')) {
         safeName = '$safeName.pdf';
@@ -182,12 +182,13 @@ class MockVotingRepository implements VotingRepository {
       // Проверяем, существует ли файл уже
       if (await file.exists()) {
         debugPrint('Файл уже существует: $filePath');
-        
+
         // Для iOS проверяем размер файла, чтобы убедиться, что он не поврежден
         if (Platform.isIOS) {
           final fileSize = await file.length();
           if (fileSize <= 0) {
-            debugPrint('Существующий файл имеет нулевой размер, загрузим заново');
+            debugPrint(
+                'Существующий файл имеет нулевой размер, загрузим заново');
           } else {
             return filePath;
           }
@@ -207,15 +208,15 @@ class MockVotingRepository implements VotingRepository {
         if (response.bodyBytes.isEmpty) {
           throw Exception('Получен пустой файл');
         }
-        
+
         // Сохраняем файл
         await file.writeAsBytes(response.bodyBytes);
-        
+
         // Проверяем, что файл действительно сохранен
         if (!await file.exists() || await file.length() <= 0) {
           throw Exception('Файл не сохранен или имеет нулевой размер');
         }
-        
+
         debugPrint('Файл успешно сохранен: $filePath');
         return filePath;
       } else {
@@ -266,19 +267,18 @@ class MockVotingRepository implements VotingRepository {
   @override
   Future<List<Department>> getDepartments() async {
     final List<Department> _mockData = [
-      Department(id: '0', name: 'ПАО ГК «ТНС энерго»', voteCount: 9),
+      Department(id: 0, name: 'ПАО ГК «ТНС энерго»', voteCount: 9),
+      Department(id: 1, name: 'ПАО «ТНС энерго Ростов-на-Дону»', voteCount: 7),
+      Department(id: 2, name: 'ПАО «ТНС энерго Воронеж»', voteCount: 7),
+      Department(id: 3, name: 'ПАО «ТНС энерго НН»', voteCount: 7),
+      Department(id: 4, name: 'ПАО «ТНС энерго Ярославль»', voteCount: 7),
+      Department(id: 5, name: 'ПАО «ТНС энерго Марий Эл»', voteCount: 7),
+      Department(id: 6, name: 'ПАО «ТНС энерго Кубань»', voteCount: 7),
+      Department(id: 7, name: 'АО «ТНС энерго Тула»', voteCount: 6),
+      Department(id: 8, name: 'АО «ТНС энерго Карелия', voteCount: 7),
+      Department(id: 9, name: 'ООО «ТНС энерго Пенза»', voteCount: 7),
       Department(
-          id: '1', name: 'ПАО «ТНС энерго Ростов-на-Дону»', voteCount: 7),
-      Department(id: '2', name: 'ПАО «ТНС энерго Воронеж»', voteCount: 7),
-      Department(id: '3', name: 'ПАО «ТНС энерго НН»', voteCount: 7),
-      Department(id: '4', name: 'ПАО «ТНС энерго Ярославль»', voteCount: 7),
-      Department(id: '5', name: 'ПАО «ТНС энерго Марий Эл»', voteCount: 7),
-      Department(id: '6', name: 'ПАО «ТНС энерго Кубань»', voteCount: 7),
-      Department(id: '7', name: 'АО «ТНС энерго Тула»', voteCount: 6),
-      Department(id: '8', name: 'АО «ТНС энерго Карелия', voteCount: 7),
-      Department(id: '9', name: 'ООО «ТНС энерго Пенза»', voteCount: 7),
-      Department(
-          id: '10', name: 'ООО «ТНС энерго Великий Новгород»', voteCount: 5),
+          id: 10, name: 'ООО «ТНС энерго Великий Новгород»', voteCount: 5),
     ];
     await Future.delayed(Duration(milliseconds: 800));
     if (_token == null) {
