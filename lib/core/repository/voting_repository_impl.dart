@@ -33,7 +33,12 @@ class VotingRepositoryImpl implements VotingRepository {
 
   @override
   Future<void> vote(String questionId, int answerId) async {
-    await _client.vote(questionId, answerId);
+    try {
+      await _client.vote(questionId, answerId);
+    } catch (e) {
+      // Обработка ошибок при голосовании
+      return; // Пробрасываем ошибку дальше
+    }
   }
 
   @override

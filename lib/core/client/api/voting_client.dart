@@ -20,9 +20,9 @@ class VotingClient {
   String? _token;
   final Duration _timeout = Duration(seconds: 15);
 
-  VotingClient({String baseUrl = 'https://gy8qg2-5-101-181-183.ru.tuna.am'})
+  VotingClient({String baseUrl = 'https://n8yd98-5-101-181-183.ru.tuna.am'})
       : _client = http.Client(),
-        _baseUrl = "https://gy8qg2-5-101-181-183.ru.tuna.am";
+        _baseUrl = "https://n8yd98-5-101-181-183.ru.tuna.am";
 
   Future<Map<String, String>> _getHeaders() async {
     final headers = {

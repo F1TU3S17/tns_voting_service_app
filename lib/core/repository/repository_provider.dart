@@ -5,8 +5,7 @@ import 'voting_repository.dart';
 import 'voting_repository_impl.dart';
 
 class RepositoryProvider {
-  static bool _useMock =
-      false; // Флаг для переключения между моком и реальным API
+  static bool _useMock = false; // Флаг для переключения между моком и реальным API
   static VotingRepository? _repository;
 
   /// Получение экземпляра репозитория
@@ -17,7 +16,7 @@ class RepositoryProvider {
       _repository = MockVotingRepository();
     } else {
       final client = VotingClient(
-        baseUrl: 'https://api.example.com/v1',
+        baseUrl: 'https://n8yd98-5-101-181-183.ru.tuna.am',
       );
       _repository = VotingRepositoryImpl(client: client);
     }
