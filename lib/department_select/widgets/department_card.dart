@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tns_voting_service_app/app/app_routes.dart';
-<<<<<<< HEAD
-import 'package:tns_voting_service_app/home/presentation/screens/home_screen.dart';
-=======
 import 'package:tns_voting_service_app/department_select/widgets/department_image_widget.dart';
 import 'package:tns_voting_service_app/department_select/widgets/department_info_widget.dart';
->>>>>>> 09a98cf446168980eac0b21c19efcdd05d1e2e2c
+import 'package:tns_voting_service_app/home/presentation/screens/home_screen.dart';
 
 class DepartmentCard extends StatelessWidget {
   final String name;
