@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tns_voting_service_app/app/app_routes.dart';
+import 'package:tns_voting_service_app/department_select/widgets/department_image_widget.dart';
+import 'package:tns_voting_service_app/department_select/widgets/department_info_widget.dart';
 
 class DepartmentCard extends StatelessWidget {
   final String name;
@@ -15,7 +18,6 @@ class DepartmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(
@@ -29,42 +31,25 @@ class DepartmentCard extends StatelessWidget {
           ),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
-            onTap: () {}, // обработка тапа если надо
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.voteList,
+                arguments: name,
+              );
+            },
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
               child: Row(
                 children: [
-                  // Заглушка под картинку
-                  Container(
-                    width: 40,
-                    height: 40,
-                    alignment: Alignment.center,
-                    child: Image.asset(
-                      imageUrl,
-                    ),
-                  ),
+                  DepartmentImageWidget(imageUrl: imageUrl),
                   const SizedBox(width: 16),
                   // Основной текст
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          name,
-                          style: theme.textTheme.titleMedium,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          "Заседания: $voteCount",
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withAlpha(150),
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: DepartmentInfoWidget(
+                        name: name, theme: theme, voteCount: voteCount),
                   ),
-
                   // Стрелка вправо
                   Icon(
                     Icons.chevron_right,

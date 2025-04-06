@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tns_voting_service_app/department_select/state/department_model.dart';
+import 'package:tns_voting_service_app/department_select/domain/state/department_model.dart';
 
 class DepartmentModelProvider extends InheritedNotifier<DepartmentModel> {
   const DepartmentModelProvider({

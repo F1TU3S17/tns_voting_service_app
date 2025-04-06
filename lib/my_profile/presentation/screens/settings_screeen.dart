@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tns_voting_service_app/app/app_routes.dart';
 import 'package:tns_voting_service_app/app/state/app_model_provider.dart';
 import 'package:tns_voting_service_app/core/global_widgets/gradient_appbar.dart';
 import 'package:tns_voting_service_app/my_profile/presentation/components/small_switch_list_tile.dart';
@@ -141,7 +142,9 @@ class _SettingsScreeenState extends State<SettingsScreeen> {
                 title: Text("Политика конфиденциальности",
                     style: theme.textTheme.bodyMedium),
                 trailing: Icon(Icons.arrow_forward_ios, size: 16),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.confidentialPolitic);
+                },
               ),
               const Divider(),
               ListTile(

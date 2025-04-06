@@ -8,6 +8,7 @@ import 'package:tns_voting_service_app/core/utils/get_current_theme.dart';
 import 'package:tns_voting_service_app/department_select/presentation/department_select_screen.dart';
 import 'package:tns_voting_service_app/history/presentation/screens/history_screen.dart';
 import 'package:tns_voting_service_app/home/presentation/screens/home_screen.dart';
+import 'package:tns_voting_service_app/my_profile/presentation/screens/confidential_politic_screen.dart';
 import 'package:tns_voting_service_app/my_profile/presentation/screens/settings_screeen.dart';
 import 'package:tns_voting_service_app/nav_bar/presentation/widgets/main_navigation.dart';
 
@@ -58,6 +59,8 @@ class AppCore extends StatelessWidget {
                     ModalRoute.of(context)!.settings.arguments as String;
                 return HomePage(departmentName: departmentName);
               },
+              AppRoutes.confidentialPolitic: (context) =>
+                  ConfidentialPoliticScreen(),
             }),
           );
   }
