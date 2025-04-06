@@ -18,10 +18,11 @@ Widget buildTableHeader(String title, Color color) {
         ),
         child: Text(
           title,
-          textAlign: TextAlign.left,
+          textAlign: TextAlign.center,
           style: TextStyle(
             color: color,
             fontWeight: FontWeight.bold,
+            fontSize: 12,
           ),
         ),
       ),
