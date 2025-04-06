@@ -35,14 +35,20 @@ class _DepartmentSelectScreenState extends State<DepartmentSelectScreen> {
                 body: ListView.builder(
                   itemCount: model?.departments.length ?? 0,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 2.0, vertical: 4.0),
-                      child: DepartmentCard(
-                        name: model!.departments[index].name,
-                        voteCount: model.departments[index].voteCount ?? 0,
-                        imageUrl: 'assets/App_logo.png',
-                      ),
+                    return Stack(
+                      clipBehavior: Clip.antiAlias,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 2.0, vertical: 4.0),
+                          child: DepartmentCard(
+                            name: model!.departments[index].name,
+                            voteCount: model.departments[index].voteCount ?? 0,
+                            imageUrl: 'assets/App_logo.png',
+                            departmentId: model.departments[index].id,
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),

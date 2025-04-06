@@ -32,6 +32,7 @@ class MockVotingRepository implements VotingRepository {
         id: id,
         title: 'Вопрос #$i',
         description: 'Описание вопроса #$i для голосования директоров',
+        departmentId: '0',
         votersCount: _random.nextInt(votersTotal),
         votersTotal: votersTotal,
         endDate: DateTime.now().add(Duration(days: _random.nextInt(14) + 1)),
@@ -54,11 +55,10 @@ class MockVotingRepository implements VotingRepository {
         files: files,
         votersCount: questionShort.votersCount,
         votersTotal: questionShort.votersTotal,
-        options: ['За', 'Против', 'Воздержаться'],
         votingType: _random.nextBool() ? VotingType.com : VotingType.bod,
         votingWay:
             _random.nextBool() ? VotingWay.majority : VotingWay.unanimous,
-        conferenceLink: 'https://zoom.us/j/123456789',
+        conferenceLink: 'https://zoom.us/j/123456789', departmentId: '1',
       );
     }
 
@@ -79,11 +79,10 @@ class MockVotingRepository implements VotingRepository {
         files: files,
         votersCount: _random.nextInt(votersTotal),
         votersTotal: votersTotal,
-        options: ['За', 'Против', 'Воздержаться'],
         votingType: _random.nextBool() ? VotingType.com : VotingType.bod,
         votingWay:
             _random.nextBool() ? VotingWay.majority : VotingWay.unanimous,
-        conferenceLink: 'https://zoom.us/j/123456789',
+        conferenceLink: 'https://zoom.us/j/123456789', departmentId: '1',
       ));
     }
   }
@@ -286,4 +285,5 @@ class MockVotingRepository implements VotingRepository {
     }
     return _mockData.map((d) => d.copyWith()).toList(); // Отправляем копии
   }
+
 }

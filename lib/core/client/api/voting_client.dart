@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:tns_voting_service_app/core/database/app_database.dart';
 import 'package:tns_voting_service_app/core/models/department_model.dart';
 import '../../models/login_model.dart';
 import '../../models/question_model.dart';
@@ -20,14 +21,19 @@ class VotingClient {
 
   VotingClient({String baseUrl = 'http://4p0daa-5-101-181-183.ru.tuna.am'})
       : _client = http.Client(),
-        _baseUrl = 'http://4p0daa-5-101-181-183.ru.tuna.am';
+        _baseUrl = "http://4p0daa-5-101-181-183.ru.tuna.am";
 
-  Map<String, String> _getHeaders() {
+  Future<Map<String, String>> _getHeaders() async {
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
+      'tuna-skip-browser-warning': 'true',
     };
 
+    final token = await AppDatabase.getToken();
+    if (token != null) {
+      _token = token;
+    }
     if (_token != null) {
       headers['Authorization'] = 'Bearer $_token';
     }
@@ -59,14 +65,15 @@ class VotingClient {
   }
 
   /// Авторизация пользователя
-  Future<LoginResponse> login(String username, String password) async {
+  Future<LoginResponse> login(String email, String password) async {
     try {
+      Map<String, String> headers = await _getHeaders();
       final response = await _client
           .post(
-            Uri.parse('$_baseUrl/api/auth/login'),
-            headers: _getHeaders(),
+            Uri.parse('$_baseUrl/api/login'),
+            headers: headers,
             body: jsonEncode(
-                LoginRequest(username: username, password: password).toJson()),
+                LoginRequest(email: email, password: password).toJson()),
           )
           .timeout(_timeout);
 
@@ -87,10 +94,11 @@ class VotingClient {
   /// Получение списка вопросов на голосование
   Future<List<QuestionShort>> getQuestions() async {
     try {
+      Map<String, String> headers = await _getHeaders();
       final response = await _client
           .get(
-            Uri.parse('$_baseUrl/api/voting/questions'),
-            headers: _getHeaders(),
+            Uri.parse('$_baseUrl/api/questions'),
+            headers: headers,
           )
           .timeout(_timeout);
 
@@ -111,10 +119,11 @@ class VotingClient {
   /// Получение детальной информации о вопросе
   Future<QuestionDetail> getQuestionDetails(String questionId) async {
     try {
+      Map<String, String> headers = await _getHeaders();
       final response = await _client
           .get(
-            Uri.parse('$_baseUrl/api/voting/questions/$questionId'),
-            headers: _getHeaders(),
+            Uri.parse('$_baseUrl/api/questions/$questionId'),
+            headers: headers,
           )
           .timeout(_timeout);
 
@@ -208,13 +217,12 @@ class VotingClient {
   /// Голосование
   Future<void> vote(String questionId, int answerId) async {
     try {
+      Map<String, String> headers = await _getHeaders();
       final response = await _client
           .post(
-            Uri.parse('$_baseUrl/api/voting/vote'),
-            headers: _getHeaders(),
-            body: jsonEncode(
-                VoteRequest(questionId: questionId, answerId: answerId)
-                    .toJson()),
+            Uri.parse('$_baseUrl/api/blockchain/vote/$questionId'),
+            headers: headers,
+            body: jsonEncode(VoteRequest(answerId: answerId).toJson()),
           )
           .timeout(_timeout);
 
@@ -240,10 +248,11 @@ class VotingClient {
   /// Получение истории завершенных голосований
   Future<List<QuestionDetail>> getVotingHistory() async {
     try {
+      Map<String, String> headers = await _getHeaders();
       final response = await _client
           .get(
             Uri.parse('$_baseUrl/api/voting/history'),
-            headers: _getHeaders(),
+            headers: headers,
           )
           .timeout(_timeout);
 
@@ -278,13 +287,13 @@ class VotingClient {
     final _myToken = _token;
     _token = '29|DKNSfcF84fVLFMb3FEWn8bZUBWwTwD4Rp4rHXSyEfcc18894';
     try {
+      Map<String, String> headers = await _getHeaders();
       final response = await _client
           .get(
             Uri.parse('$_baseUrl/api/departments'),
-            headers: _getHeaders(),
+            headers: headers,
           )
           .timeout(_timeout);
-      _token = _myToken;
       return _handleResponse(
           response,
           (data) =>
@@ -298,10 +307,3 @@ class VotingClient {
     }
   }
 }
-
-// void main() async {
-//   final client = VotingClient();
-//   client._token = '2|uC4nZiEIPpWpLwgUE95m4qKETfIkCy0u16rctGZ025745224';
-//   List<Department> deps = await client.getDepartments();
-//   return;
-// }

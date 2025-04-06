@@ -87,12 +87,12 @@ Widget buildColoredPercentageText(
                         text: '${yep100}%',
                         style: TextStyle(color: Colors.green),
                       ),
-                      TextSpan(text: ' / '),
+                      TextSpan(text: '/'),
                       TextSpan(
                         text: '${maybe100}%',
                         style: TextStyle(color: Colors.orange),
                       ),
-                      TextSpan(text: ' / '),
+                      TextSpan(text: '/'),
                       TextSpan(
                         text: '${no100}%',
                         style: TextStyle(color: Colors.red),

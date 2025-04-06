@@ -24,6 +24,8 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
   List<String> supporters = [
     'Иванов И.',
     'Петров П.',
+    'Сидоров С.',
+    'Иванов И.'
   ];
   List<String> abstained = ['Смирнов С.', 'Кузнецов К.'];
   List<String> opposed = ['Васильев В.', 'Николаев Н.', 'Фёдоров Ф.'];
@@ -126,11 +128,11 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                         // Ссылка на конференцию, если она есть
                         if (model.questionDetail?.conferenceLink != null &&
                             model
-                                .questionDetail!.conferenceLink.isNotEmpty) ...[
+                                .questionDetail!.conferenceLink!.isEmpty) ...[
                           const SizedBox(height: 12),
                           InkWell(
                             onTap: () => _launchURL(
-                                model.questionDetail!.conferenceLink),
+                                model.questionDetail!.conferenceLink!),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -155,7 +157,7 @@ class _InfoStoryScreenState extends State<InfoStoryScreen> {
                                         ),
                                       ),
                                       Text(
-                                        model.questionDetail!.conferenceLink,
+                                        model.questionDetail!.conferenceLink!,
                                         style: textTheme.bodyMedium?.copyWith(
                                           color: isDark
                                               ? AppTheme.darkAccentColor

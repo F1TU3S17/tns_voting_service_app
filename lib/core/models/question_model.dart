@@ -2,6 +2,7 @@ class QuestionShort {
   final String id;
   final String title;
   final String description;
+  final String departmentId;
   final int votersCount;
   final int votersTotal;
   final DateTime endDate;
@@ -10,6 +11,7 @@ class QuestionShort {
     required this.id,
     required this.title,
     required this.description,
+    required this.departmentId,
     required this.votersCount,
     required this.votersTotal,
     required this.endDate,
@@ -20,6 +22,7 @@ class QuestionShort {
       id: json['id'],
       title: json['title'],
       description: json['description'],
+      departmentId: json['departmentId'],
       votersCount: json['votersCount'],
       votersTotal: json['votersTotal'],
       endDate: DateTime.parse(json['endDate']),
@@ -51,22 +54,22 @@ class QuestionDetail {
   final String id;
   final String title;
   final String description;
+  final String departmentId;
   final List<FileInfo> files;
   final int votersCount;
   final int votersTotal;
-  final List<String> options;
   final VotingType votingType;
   final VotingWay votingWay;
-  final String conferenceLink;
+  final String? conferenceLink;
 
   QuestionDetail({
     required this.id,
     required this.title,
     required this.description,
+    required this.departmentId,
     required this.files,
     required this.votersCount,
     required this.votersTotal,
-    required this.options,
     required this.votingType,
     required this.votingWay,
     required this.conferenceLink,
@@ -95,12 +98,12 @@ class QuestionDetail {
       id: json['id'],
       title: json['title'],
       description: json['description'],
+      departmentId: json['departmentId'],
       files: (json['files'] as List)
           .map((fileJson) => FileInfo.fromJson(fileJson))
           .toList(),
       votersCount: json['votersCount'],
       votersTotal: json['votersTotal'],
-      options: List<String>.from(json['options']),
       votingType: json['votingType'] == 'com' ? VotingType.com : VotingType.bod,
       votingWay: json['votingWay'] == 'majority'
           ? VotingWay.majority

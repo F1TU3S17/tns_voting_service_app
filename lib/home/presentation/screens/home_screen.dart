@@ -9,20 +9,22 @@ import 'package:tns_voting_service_app/home/domain/state/home_screen_model_provi
 import 'package:tns_voting_service_app/home/presentation/widgets/session_card.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.departmentName});
+  const HomePage({super.key, required this.departmentName, required this.departmentId});
   final String departmentName;
+  final String departmentId;
   @override
-  State<HomePage> createState() => _HomePageState(departmentName);
+  State<HomePage> createState() => _HomePageState(departmentName, departmentId);
 }
 
 class _HomePageState extends State<HomePage> {
   final HomeScreenModel model = HomeScreenModel();
   final String departmentName;
-  _HomePageState(this.departmentName);
+  final String departmentId;
+  _HomePageState(this.departmentName, this.departmentId);
   @override
   void initState() {
     super.initState();
-    model.initQuestions();
+    model.initQuestions(departmentId);
   }
 
   @override
@@ -41,7 +43,7 @@ class _HomePageState extends State<HomePage> {
             body: RefreshIndicator(
               color: theme.iconTheme.color,
               onRefresh: () async {
-                await model.initQuestions();
+                await model.initQuestions(departmentId);
               },
               child: ListView.builder(
                   itemCount: model.questions.length,
