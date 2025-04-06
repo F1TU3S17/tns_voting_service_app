@@ -228,7 +228,8 @@ class _InfoScreenState extends State<InfoScreen> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 12),
+                        ],
+                        const SizedBox(height: 12),
                           ElevatedButton.icon(
                             onPressed: () {
                               _addToCalendar(context);
@@ -246,9 +247,9 @@ class _InfoScreenState extends State<InfoScreen> {
                               visualDensity: VisualDensity.compact,
                             ),
                           ),
-                        ],
                         Divider(color: dividerColor, thickness: 1),
                         const SizedBox(height: 12),
+
 
                         // Секция с прикрепленными файлами
                         if (model.questionDetail!.files.isNotEmpty) ...[
