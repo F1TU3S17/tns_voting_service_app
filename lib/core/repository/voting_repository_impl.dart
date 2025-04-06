@@ -1,3 +1,5 @@
+import 'package:tns_voting_service_app/core/models/department_model.dart';
+
 import '../client/api/voting_client.dart';
 import '../models/login_model.dart';
 import '../models/question_model.dart';
@@ -44,5 +46,10 @@ class VotingRepositoryImpl implements VotingRepository {
   @override
   void logout() {
     _client.logout();
+  }
+
+  @override
+  Future<List<Department>> getDepartments() async {
+    return await _client.getDepartments();
   }
 }

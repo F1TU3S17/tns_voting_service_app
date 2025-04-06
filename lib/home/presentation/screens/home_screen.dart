@@ -9,13 +9,16 @@ import 'package:tns_voting_service_app/home/domain/state/home_screen_model_provi
 import 'package:tns_voting_service_app/home/presentation/widgets/session_card.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.departmentName});
+  final String departmentName;
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState(departmentName);
 }
 
 class _HomePageState extends State<HomePage> {
   final HomeScreenModel model = HomeScreenModel();
+  final String departmentName;
+  _HomePageState(this.departmentName);
   @override
   void initState() {
     super.initState();
@@ -32,7 +35,8 @@ class _HomePageState extends State<HomePage> {
         return Stack(children: [
           Scaffold(
             appBar: GradientAppBar(
-              title: "Главная",
+              title: departmentName,
+              fontSize: 14,
             ),
             body: RefreshIndicator(
               color: theme.iconTheme.color,
@@ -47,7 +51,8 @@ class _HomePageState extends State<HomePage> {
                       clipBehavior: Clip.antiAlias,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 4.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 2.0, vertical: 4.0),
                           child: SessionCard(
                             title: questions[index].title,
                             description: questions[index].description,

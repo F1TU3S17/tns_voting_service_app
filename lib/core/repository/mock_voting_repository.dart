@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+import 'package:tns_voting_service_app/core/models/department_model.dart';
 import '../models/login_model.dart';
 import '../models/question_model.dart';
 import 'voting_repository.dart';
@@ -124,7 +125,12 @@ class MockVotingRepository implements VotingRepository {
   Future<String> downloadFile(String fileId, String fileName) async {
     try {
       // Получаем безопасное имя файла
-      final safeName = fileName.replaceAll(RegExp(r'[^\w\s\.\-]'), '_');
+      var safeName = fileName.replaceAll(RegExp(r'[^\w\s\.\-]'), '_');
+      
+      // Проверяем расширение файла и добавляем .pdf если нет
+      if (!safeName.toLowerCase().endsWith('.pdf')) {
+        safeName = '$safeName.pdf';
+      }
 
       Directory directory;
 
@@ -155,8 +161,9 @@ class MockVotingRepository implements VotingRepository {
         }
       } else if (Platform.isIOS) {
         // iOS-специфичный код
-        // На iOS используем стандартную директорию документов приложения
-        directory = await getApplicationDocumentsDirectory();
+        // Для iOS лучше использовать временную директорию для файлов,
+        // которые будут открываться другими приложениями
+        directory = await getTemporaryDirectory();
       } else {
         // Для других платформ
         directory = await getApplicationDocumentsDirectory();
@@ -175,7 +182,18 @@ class MockVotingRepository implements VotingRepository {
       // Проверяем, существует ли файл уже
       if (await file.exists()) {
         debugPrint('Файл уже существует: $filePath');
-        return filePath;
+        
+        // Для iOS проверяем размер файла, чтобы убедиться, что он не поврежден
+        if (Platform.isIOS) {
+          final fileSize = await file.length();
+          if (fileSize <= 0) {
+            debugPrint('Существующий файл имеет нулевой размер, загрузим заново');
+          } else {
+            return filePath;
+          }
+        } else {
+          return filePath;
+        }
       }
 
       final url =
@@ -185,8 +203,19 @@ class MockVotingRepository implements VotingRepository {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
+        // Проверяем наличие контента
+        if (response.bodyBytes.isEmpty) {
+          throw Exception('Получен пустой файл');
+        }
+        
         // Сохраняем файл
         await file.writeAsBytes(response.bodyBytes);
+        
+        // Проверяем, что файл действительно сохранен
+        if (!await file.exists() || await file.length() <= 0) {
+          throw Exception('Файл не сохранен или имеет нулевой размер');
+        }
+        
         debugPrint('Файл успешно сохранен: $filePath');
         return filePath;
       } else {
@@ -232,5 +261,29 @@ class MockVotingRepository implements VotingRepository {
   @override
   void logout() {
     _token = null;
+  }
+
+  @override
+  Future<List<Department>> getDepartments() async {
+    final List<Department> _mockData = [
+      Department(id: '0', name: 'ПАО ГК «ТНС энерго»', voteCount: 9),
+      Department(
+          id: '1', name: 'ПАО «ТНС энерго Ростов-на-Дону»', voteCount: 7),
+      Department(id: '2', name: 'ПАО «ТНС энерго Воронеж»', voteCount: 7),
+      Department(id: '3', name: 'ПАО «ТНС энерго НН»', voteCount: 7),
+      Department(id: '4', name: 'ПАО «ТНС энерго Ярославль»', voteCount: 7),
+      Department(id: '5', name: 'ПАО «ТНС энерго Марий Эл»', voteCount: 7),
+      Department(id: '6', name: 'ПАО «ТНС энерго Кубань»', voteCount: 7),
+      Department(id: '7', name: 'АО «ТНС энерго Тула»', voteCount: 6),
+      Department(id: '8', name: 'АО «ТНС энерго Карелия', voteCount: 7),
+      Department(id: '9', name: 'ООО «ТНС энерго Пенза»', voteCount: 7),
+      Department(
+          id: '10', name: 'ООО «ТНС энерго Великий Новгород»', voteCount: 5),
+    ];
+    await Future.delayed(Duration(milliseconds: 800));
+    if (_token == null) {
+      throw Exception('Токен недействителен');
+    }
+    return _mockData.map((d) => d.copyWith()).toList(); // Отправляем копии
   }
 }

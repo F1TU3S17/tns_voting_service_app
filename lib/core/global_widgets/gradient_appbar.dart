@@ -8,6 +8,7 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool automaticallyImplyLeading;
   final PreferredSizeWidget? bottom;
   final double elevation;
+  final double fontSize;
 
   const GradientAppBar({
     super.key,
@@ -15,6 +16,7 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.automaticallyImplyLeading = true,
     this.bottom,
     this.elevation = 0,
+    this.fontSize = 24,
     // required this.gradient,
   });
 
@@ -26,7 +28,10 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
         appModel.isDarkTheme ? AppTheme.gradientDark : AppTheme.gradientLigth;
     return AppBar(
       title: title != null
-          ? Text(title!, style: theme.textTheme.displaySmall)
+          ? Text(
+              title!,
+              style: theme.textTheme.displaySmall?.copyWith(fontSize: fontSize),
+            )
           : null,
       actions: [
         Padding(
