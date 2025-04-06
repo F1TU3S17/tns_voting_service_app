@@ -140,9 +140,14 @@ class VotingClient {
   /// Скачивание файла
   Future<String> downloadFile(String fileId, String fileName) async {
     try {
-      // Получаем безопасное имя файла
-      final safeName = fileName.replaceAll(RegExp(r'[^\w\s\.\-]'), '_');
-
+       // Получаем безопасное имя файла
+      var safeName = fileName.replaceAll(RegExp(r'[^\w\s\.\-]'), '_');
+      
+      // Проверяем расширение файла и добавляем .pdf если нет
+      if (!safeName.toLowerCase().endsWith('.pdf')) {
+        safeName = '$safeName.pdf';
+      }
+      final headers = await _getHeaders();
       Directory directory;
 
       if (Platform.isAndroid) {
@@ -172,8 +177,9 @@ class VotingClient {
         }
       } else if (Platform.isIOS) {
         // iOS-специфичный код
-        // На iOS используем стандартную директорию документов приложения
-        directory = await getApplicationDocumentsDirectory();
+        // Для iOS лучше использовать временную директорию для файлов,
+        // которые будут открываться другими приложениями
+        directory = await getTemporaryDirectory();
       } else {
         // Для других платформ
         directory = await getApplicationDocumentsDirectory();
@@ -192,13 +198,24 @@ class VotingClient {
       // Проверяем, существует ли файл уже
       if (await file.exists()) {
         debugPrint('Файл уже существует: $filePath');
-        return filePath;
+        
+        // Для iOS проверяем размер файла, чтобы убедиться, что он не поврежден
+        if (Platform.isIOS) {
+          final fileSize = await file.length();
+          if (fileSize <= 0) {
+            debugPrint('Существующий файл имеет нулевой размер, загрузим заново');
+          } else {
+            return filePath;
+          }
+        } else {
+          return filePath;
+        }
       }
 
       final url =
-          "$_baseUrl/api/voting/files/$fileId"; // URL для скачивания файла
+          "$_baseUrl/api/files/$fileId"; // URL для скачивания файла
       // Скачиваем файл
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(url), headers: headers);
 
       if (response.statusCode == 200) {
         // Сохраняем файл
